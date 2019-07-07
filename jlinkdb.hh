@@ -23,10 +23,13 @@
 #ifndef JLINKDB_JLINKDB_H
 #define JLINKDB_JLINKDB_H
 
+#include <cstddef>
 #include <functional>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 namespace jlinkdb {
@@ -48,7 +51,7 @@ public:
     const std::string& name() const;
     void set_name(const std::string& name);
 
-    const std::string description() const;
+    const std::string& description() const;
     void set_description(const std::string& description);
 
     const std::unordered_set<std::string>& tags() const;
@@ -71,48 +74,42 @@ private:
     std::unordered_map<std::string, std::string> attributes_;
 };
 
+class Query {
+public:
+    virtual bool matches(const LinkEntry& entry) const = 0;
+};
+
 class LinkDatabase {
 public:
-    class Query {
-    public:
-        void add_name(const std::string& str);
-        void add_description(const std::string& str);
-        void add_tag(const std::string& tag);
-        void add_attribute(
-            const std::string& attribute, const std::string& value);
+    using LinkEntryIterator =
+        typename std::unordered_map<int, std::shared_ptr<LinkEntry>>::iterator;
+    using ConstLinkEntryIterator = typename std::unordered_map<int,
+        std::shared_ptr<LinkEntry>>::const_iterator;
 
-    private:
-        std::unordered_set<std::string> name_strings;
-        std::unordered_set<std::string> description_strings;
-        std::unordered_set<std::string> tags;
-        std::unordered_map<std::string, std::string> attributes;
-    };
-
-    class QueryResult {
-    public:
-    };
-
-    using LinkEntryIterator = typename std::unordered_set<LinkEntry>::iterator;
-    using ConstLinkEntryIterator =
-        typename std::unordered_set<LinkEntry>::const_iterator;
-
-
-    LinkDatabase() = default;
+    LinkDatabase();
     LinkDatabase(const LinkDatabase& other) = default;
     LinkDatabase(LinkDatabase&& other) = default;
 
     LinkDatabase& operator=(const LinkDatabase& other) = default;
     LinkDatabase& operator=(LinkDatabase&& other) = default;
 
-    LinkEntryIterator links_begin() const;
-    LinkEntryIterator links_end() const;
-    LinkEntryIterator links_cbegin() const;
-    LinkEntryIterator links_cend() const;
+    LinkEntryIterator links_begin();
+    LinkEntryIterator links_end();
+    ConstLinkEntryIterator links_cbegin() const;
+    ConstLinkEntryIterator links_cend() const;
 
-    size_t links_count() const;
+    std::size_t links_count() const;
+    std::shared_ptr<LinkEntry> get_entry(int id) const;
+    // Returns the new id.
+    int add_entry(std::shared_ptr<LinkEntry> entry);
+    void delete_entry(int id);
+
+    std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> query(
+        const Query& query) const;
 
 private:
-    std::vector<LinkEntry> links;
+    std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
+    int highest_id_;
 };
 
 } // namespace jlinkdb
