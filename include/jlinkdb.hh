@@ -23,8 +23,11 @@
 #ifndef JLINKDB_JLINKDB_H
 #define JLINKDB_JLINKDB_H
 
+#include <libxml++/libxml++.h>
+
 #include <cstddef>
 #include <functional>
+#include <istream>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -69,6 +72,7 @@ public:
 
 private:
     std::string link_;
+    std::string name_;
     std::string description_;
     std::unordered_set<std::string> tags_;
     std::unordered_map<std::string, std::string> attributes_;
@@ -77,6 +81,7 @@ private:
 class Query {
 public:
     virtual bool matches(const LinkEntry& entry) const = 0;
+    virtual ~Query(){};
 };
 
 class LinkDatabase {
@@ -87,6 +92,8 @@ public:
         std::shared_ptr<LinkEntry>>::const_iterator;
 
     LinkDatabase();
+    LinkDatabase(std::istream& reader);
+    LinkDatabase(const std::string& path);
     LinkDatabase(const LinkDatabase& other) = default;
     LinkDatabase(LinkDatabase&& other) = default;
 
@@ -99,6 +106,7 @@ public:
     ConstLinkEntryIterator links_cend() const;
 
     std::size_t links_count() const;
+    bool has_entry(int id) const;
     std::shared_ptr<LinkEntry> get_entry(int id) const;
     // Returns the new id.
     int add_entry(std::shared_ptr<LinkEntry> entry);
@@ -110,9 +118,13 @@ public:
 private:
     std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
     int highest_id_;
+
+    void set_from_document(const xmlpp::Document& document);
+    void parse_link_node(const xmlpp::Element* node);
+    void parse_link_node_child(
+        const xmlpp::Node* child, std::shared_ptr<LinkEntry> entry);
 };
 
 } // namespace jlinkdb
 
 #endif // JLINKDB_JLINKDB_H
-

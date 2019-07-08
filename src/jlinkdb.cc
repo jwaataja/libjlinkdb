@@ -22,8 +22,11 @@
 
 #include "jlinkdb.hh"
 
+#include <libxml++/libxml++.h>
+
 #include <algorithm>
 #include <cstddef>
+#include <fstream>
 #include <iterator>
 #include <memory>
 #include <string>
@@ -53,6 +56,18 @@ void
 LinkEntry::set_link(const string& link)
 {
     link_ = link;
+}
+
+const string&
+LinkEntry::name() const
+{
+    return name_;
+}
+
+void
+LinkEntry::set_name(const string& name)
+{
+    name_ = name;
 }
 
 const string&
@@ -137,6 +152,20 @@ LinkDatabase::LinkDatabase() : highest_id_(0)
 {
 }
 
+LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
+{
+    xmlpp::DomParser parser;
+    // TODO(jason): Handle exceptions for next two lines.
+    parser.parse_stream(reader);
+    set_from_document(*parser.get_document());
+}
+
+LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
+{
+    xmlpp::DomParser parser{ path };
+    set_from_document(*parser.get_document());
+}
+
 LinkDatabase::LinkEntryIterator
 LinkDatabase::links_begin()
 {
@@ -165,6 +194,12 @@ std::size_t
 LinkDatabase::links_count() const
 {
     return links_.size();
+}
+
+bool
+LinkDatabase::has_entry(int id) const
+{
+    return links_.find(id) != links_.end();
 }
 
 shared_ptr<LinkEntry>
@@ -202,4 +237,50 @@ LinkDatabase::query(const Query& query) const
         });
     return result;
 }
+
+void
+LinkDatabase::set_from_document(const xmlpp::Document& document)
+{
+    const xmlpp::Element* root = document.get_root_node();
+    if (root->get_name() != "links") {
+        // throw exception
+    }
+    for (const auto& child : root->get_children()) {
+        if (dynamic_cast<const xmlpp::CommentNode*>(child) != nullptr)
+            continue;
+        if (child->get_name() != "link") {
+            // throw exception
+        }
+        const xmlpp::Element* element =
+            dynamic_cast<const xmlpp::Element*>(child);
+        if (element != nullptr) {
+            // throw exception
+        }
+        parse_link_node(element);
+    }
+}
+
+void
+LinkDatabase::parse_link_node(const xmlpp::Element* node)
+{
+    auto location = node->get_attribute("location");
+    // TODO(jason): Use get_attribute_value instead and then allow the empty
+    // case when the attribute is not found?
+    if (location == nullptr) {
+        // throw exception
+    }
+
+    auto entry = std::make_shared<LinkEntry>(location->get_value());
+    for (const auto& child : node->get_children())
+        parse_link_node_child(child, entry);
+
+    add_entry(entry);
+}
+
+void
+LinkDatabase::parse_link_node_child(const xmlpp::Node*,
+    shared_ptr<LinkEntry>)
+{
+}
+
 } // namespace jlinkdb
