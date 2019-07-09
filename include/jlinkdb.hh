@@ -29,6 +29,7 @@
 #include <functional>
 #include <istream>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -40,7 +41,7 @@ namespace jlinkdb {
 class LinkEntry {
 public:
     LinkEntry() = default;
-    LinkEntry(const std::string& link);
+    LinkEntry(const std::string& location);
 
     LinkEntry(const LinkEntry& other) = default;
     LinkEntry(LinkEntry&& other) = default;
@@ -48,8 +49,11 @@ public:
     LinkEntry& operator=(const LinkEntry& other) = default;
     LinkEntry& operator=(LinkEntry&& other) = default;
 
-    const std::string& link() const;
-    void set_link(const std::string& link);
+    bool operator==(const LinkEntry& other) const;
+    bool operator!=(const LinkEntry& other) const;
+
+    const std::string& location() const;
+    void set_location(const std::string& link);
 
     const std::string& name() const;
     void set_name(const std::string& name);
@@ -71,7 +75,7 @@ public:
     void clear_attributes();
 
 private:
-    std::string link_;
+    std::string location_;
     std::string name_;
     std::string description_;
     std::unordered_set<std::string> tags_;
@@ -92,8 +96,8 @@ public:
         std::shared_ptr<LinkEntry>>::const_iterator;
 
     LinkDatabase();
-    LinkDatabase(std::istream& reader);
-    LinkDatabase(const std::string& path);
+    explicit LinkDatabase(std::istream& reader);
+    explicit LinkDatabase(const std::string& path);
     LinkDatabase(const LinkDatabase& other) = default;
     LinkDatabase(LinkDatabase&& other) = default;
 
@@ -115,6 +119,9 @@ public:
     std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> query(
         const Query& query) const;
 
+    void write_to_stream(std::ostream& writer) const;
+    void write_to_file(const std::string& path) const;
+
 private:
     std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
     int highest_id_;
@@ -122,7 +129,13 @@ private:
     void set_from_document(const xmlpp::Document& document);
     void parse_link_node(const xmlpp::Element* node);
     void parse_link_node_child(
-        const xmlpp::Node* child, std::shared_ptr<LinkEntry> entry);
+        const xmlpp::Node* child, std::shared_ptr<LinkEntry> entry) const;
+    std::string node_text(const xmlpp::Node* node) const;
+
+    void add_text_child(xmlpp::Element* element, const std::string& name,
+        const std::string& content) const;
+    void add_text_child_if_nonempty(xmlpp::Element* element,
+        const std::string& name, const std::string& content) const;
 };
 
 } // namespace jlinkdb

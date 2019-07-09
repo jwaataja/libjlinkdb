@@ -42,20 +42,34 @@ using std::vector;
 
 namespace jlinkdb {
 
-LinkEntry::LinkEntry(const string& link) : link_{ link }
+LinkEntry::LinkEntry(const string& location) : location_{ location }
 {
+}
+
+bool
+LinkEntry::operator==(const LinkEntry& other) const
+{
+    return location_ == other.location_ && name_ == other.name_
+        && description_ == other.description_ && tags_ == other.tags_
+        && attributes_ == other.attributes_;
+}
+
+bool
+LinkEntry::operator!=(const LinkEntry& other) const
+{
+    return !(*this == other);
 }
 
 const string&
-LinkEntry::link() const
+LinkEntry::location() const
 {
-    return link_;
+    return location_;
 }
 
 void
-LinkEntry::set_link(const string& link)
+LinkEntry::set_location(const string& location)
 {
-    link_ = link;
+    location_ = location;
 }
 
 const string&
@@ -239,23 +253,61 @@ LinkDatabase::query(const Query& query) const
 }
 
 void
+LinkDatabase::write_to_stream(std::ostream& writer) const
+{
+    xmlpp::Document document;
+    auto root = document.create_root_node("links");
+    for (const auto& entry : links_) {
+        auto child = root->add_child_element("link");
+        add_text_child_if_nonempty(
+            child, "location", entry.second->location());
+        add_text_child_if_nonempty(child, "name", entry.second->name());
+        add_text_child_if_nonempty(
+            child, "description", entry.second->description());
+        for (const auto& tag : entry.second->tags())
+            add_text_child(child, "tag", tag);
+
+        for (const auto& attribute : entry.second->attributes()) {
+            auto attribute_element = child->add_child_element("attribute");
+            attribute_element->set_attribute("name", attribute.first);
+            attribute_element->add_child_text(attribute.second);
+        }
+    }
+    document.write_to_stream(writer);
+}
+
+void
+LinkDatabase::write_to_file(const string& path) const
+{
+    std::ofstream writer{ path };
+
+    // TODO(jason): Error handling here.
+
+    write_to_stream(writer);
+}
+
+void
 LinkDatabase::set_from_document(const xmlpp::Document& document)
 {
     const xmlpp::Element* root = document.get_root_node();
     if (root->get_name() != "links") {
         // throw exception
     }
+
     for (const auto& child : root->get_children()) {
         if (dynamic_cast<const xmlpp::CommentNode*>(child) != nullptr)
             continue;
+
         if (child->get_name() != "link") {
             // throw exception
         }
+
         const xmlpp::Element* element =
             dynamic_cast<const xmlpp::Element*>(child);
         if (element != nullptr) {
             // throw exception
         }
+
         parse_link_node(element);
     }
 }
@@ -263,14 +315,7 @@ LinkDatabase::set_from_document(const xmlpp::Document& document)
 void
 LinkDatabase::parse_link_node(const xmlpp::Element* node)
 {
-    auto location = node->get_attribute("location");
-    // TODO(jason): Use get_attribute_value instead and then allow the empty
-    // case when the attribute is not found?
-    if (location == nullptr) {
-        // throw exception
-    }
-
-    auto entry = std::make_shared<LinkEntry>(location->get_value());
+    auto entry = std::make_shared<LinkEntry>();
     for (const auto& child : node->get_children())
         parse_link_node_child(child, entry);
 
@@ -278,9 +323,65 @@ LinkDatabase::parse_link_node(const xmlpp::Element* node)
 }
 
 void
-LinkDatabase::parse_link_node_child(const xmlpp::Node*,
-    shared_ptr<LinkEntry>)
+LinkDatabase::parse_link_node_child(
+    const xmlpp::Node* child, shared_ptr<LinkEntry> entry) const
 {
+    if (dynamic_cast<const xmlpp::CommentNode*>(child) != nullptr)
+        return;
+
+    if (child->get_name() == "location")
+        entry->set_location(node_text(child));
+    else if (child->get_name() == "name")
+        entry->set_name(node_text(child));
+    else if (child->get_name() == "description")
+        entry->set_description(node_text(child));
+    else if (child->get_name() == "tag")
+        entry->add_tag(node_text(child));
+    else if (child->get_name() == "attribute") {
+        auto element = dynamic_cast<const xmlpp::Element*>(child);
+        if (element == nullptr) {
+            // throw exception
+        }
+
+        auto attribute = element->get_attribute("name");
+        if (attribute == nullptr) {
+            // throw exception
+        }
+
+        entry->set_attribute(attribute->get_value(), node_text(child));
+    }
+}
+
+string
+LinkDatabase::node_text(const xmlpp::Node* node) const
+{
+    auto element = dynamic_cast<const xmlpp::Element*>(node);
+    if (element == nullptr) {
+        // throw exception
+    }
+
+    auto text = element->get_first_child_text();
+    if (text == nullptr) {
+        // throw exception
+    }
+
+    return text->get_content();
+}
+
+void
+LinkDatabase::add_text_child(xmlpp::Element* element, const std::string& name,
+    const std::string& content) const
+{
+    auto container = element->add_child_element(name);
+    container->add_child_text(content);
+}
+
+void
+LinkDatabase::add_text_child_if_nonempty(xmlpp::Element* element,
+    const std::string& name, const std::string& content) const
+{
+    if (!content.empty())
+        add_text_child(element, name, content);
 }
 
 } // namespace jlinkdb
