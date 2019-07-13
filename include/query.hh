@@ -20,11 +20,19 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef JLINKDB_JLINKDB_H
-#define JLINKDB_JLINKDB_H
+#ifndef JLINKDB_QUERY_H
+#define JLINKDB_QUERY_H
 
 #include "link_entry.hh"
-#include "query.hh"
-#include "link_database.hh"
 
-#endif // JLINKDB_JLINKDB_H
+namespace jlinkdb {
+
+class Query {
+public:
+    virtual bool matches(const LinkEntry& entry) const = 0;
+    virtual ~Query(){};
+};
+
+} // namespace jlinkdb
+
+#endif // JLINKDB_QUERY_H

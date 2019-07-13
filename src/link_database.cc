@@ -20,147 +20,24 @@
  * IN THE SOFTWARE.
  */
 
-#include "jlinkdb.hh"
+#include "link_database.hh"
 
 #include <libxml++/libxml++.h>
 
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
+#include <iostream>
 #include <iterator>
 #include <memory>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <utility>
 
 using std::shared_ptr;
 using std::string;
-using std::unordered_map;
-using std::unordered_set;
 using std::vector;
 
 namespace jlinkdb {
-
-LinkEntry::LinkEntry(const string& location) : location_{ location }
-{
-}
-
-bool
-LinkEntry::operator==(const LinkEntry& other) const
-{
-    return location_ == other.location_ && name_ == other.name_
-        && description_ == other.description_ && tags_ == other.tags_
-        && attributes_ == other.attributes_;
-}
-
-bool
-LinkEntry::operator!=(const LinkEntry& other) const
-{
-    return !(*this == other);
-}
-
-const string&
-LinkEntry::location() const
-{
-    return location_;
-}
-
-void
-LinkEntry::set_location(const string& location)
-{
-    location_ = location;
-}
-
-const string&
-LinkEntry::name() const
-{
-    return name_;
-}
-
-void
-LinkEntry::set_name(const string& name)
-{
-    name_ = name;
-}
-
-const string&
-LinkEntry::description() const
-{
-    return description_;
-}
-
-const unordered_set<string>&
-LinkEntry::tags() const
-{
-    return tags_;
-}
-
-bool
-LinkEntry::has_tag(const string& tag) const
-{
-    return tags_.find(tag) != tags_.end();
-}
-
-void
-LinkEntry::add_tag(const string& tag)
-{
-    tags_.insert(tag);
-}
-
-void
-LinkEntry::remove_tag(const string& tag)
-{
-    tags_.erase(tag);
-}
-
-void
-LinkEntry::clear_tags()
-{
-    tags_.clear();
-}
-
-const unordered_map<string, string>&
-LinkEntry::attributes() const
-{
-    return attributes_;
-}
-
-bool
-LinkEntry::has_attribute(const string& attribute) const
-{
-    return attributes_.find(attribute) != attributes_.end();
-}
-
-void
-LinkEntry::set_description(const string& description)
-{
-    description_ = description;
-}
-
-const string&
-LinkEntry::get_attribute(const string& attribute) const
-{
-    return attributes_.at(attribute);
-}
-
-void
-LinkEntry::set_attribute(const string& attribute, const string& value)
-{
-    attributes_[attribute] = value;
-}
-
-void
-LinkEntry::remove_attribute(const string& attribute)
-{
-    attributes_.erase(attribute);
-}
-
-void
-LinkEntry::clear_attributes()
-{
-    attributes_.clear();
-}
 
 LinkDatabase::LinkDatabase() : highest_id_(0)
 {

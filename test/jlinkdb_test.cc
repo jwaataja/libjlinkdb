@@ -178,8 +178,8 @@ class LinkDatabaseTest : public ::testing::Test {
 protected:
     void SetUp() override
     {
-        add_link(db1, "a");
-        add_link(db1, "b");
+        add_link(db1_, "a");
+        add_link(db1_, "b");
         expected_entries_.push_back({});
         LinkEntry link{ "https://gentoo.org" };
         link.set_name("MyName");
@@ -192,8 +192,8 @@ protected:
     }
 
     // TODO(jason): Change these to db_ and db1_.
-    LinkDatabase db;
-    LinkDatabase db1;
+    LinkDatabase db_;
+    LinkDatabase db1_;
     std::vector<LinkEntry> expected_entries_;
 };
 
@@ -201,7 +201,7 @@ protected:
 
 TEST_F(LinkDatabaseTest, TestIterator)
 {
-    auto links = gather_links(db1);
+    auto links = gather_links(db1_);
     EXPECT_EQ(2, links.size());
     EXPECT_TRUE(has_link(links, "a"));
     EXPECT_TRUE(has_link(links, "b"));
@@ -209,16 +209,16 @@ TEST_F(LinkDatabaseTest, TestIterator)
 
 TEST_F(LinkDatabaseTest, TestAddEntryId)
 {
-    int id1 = db.add_entry(std::make_shared<LinkEntry>("a"));
-    int id2 = db.add_entry(std::make_shared<LinkEntry>("b"));
-    EXPECT_EQ("a", db.get_entry(id1)->location());
-    EXPECT_EQ("b", db.get_entry(id2)->location());
+    int id1 = db_.add_entry(std::make_shared<LinkEntry>("a"));
+    int id2 = db_.add_entry(std::make_shared<LinkEntry>("b"));
+    EXPECT_EQ("a", db_.get_entry(id1)->location());
+    EXPECT_EQ("b", db_.get_entry(id2)->location());
 }
 
 TEST_F(LinkDatabaseTest, TestHasLink)
 {
-    int id = db.add_entry(std::make_shared<LinkEntry>("a"));
-    EXPECT_TRUE(db.has_entry(id));
+    int id = db_.add_entry(std::make_shared<LinkEntry>("a"));
+    EXPECT_TRUE(db_.has_entry(id));
 }
 
 TEST_F(LinkDatabaseTest, TestRemoveLink)
@@ -233,12 +233,12 @@ TEST_F(LinkDatabaseTest, TestRemoveLink)
 TEST_F(LinkDatabaseTest, TestQueryNone)
 {
     EXPECT_TRUE(
-        query_func(db1, [](const LinkEntry&) { return false; }).empty());
+        query_func(db1_, [](const LinkEntry&) { return false; }).empty());
 }
 
 TEST_F(LinkDatabaseTest, TestQueryAll)
 {
-    auto links = query_func(db1, [](const LinkEntry&) { return true; });
+    auto links = query_func(db1_, [](const LinkEntry&) { return true; });
     EXPECT_EQ(2, links.size());
     EXPECT_TRUE(has_link(links, "a"));
     EXPECT_TRUE(has_link(links, "b"));
@@ -247,7 +247,7 @@ TEST_F(LinkDatabaseTest, TestQueryAll)
 TEST_F(LinkDatabaseTest, TestQueryBasic)
 {
     auto links = query_func(
-        db1, [](const LinkEntry& entry) { return entry.location() == "a"; });
+        db1_, [](const LinkEntry& entry) { return entry.location() == "a"; });
     EXPECT_EQ(1, links.size());
     EXPECT_TRUE(has_link(links, "a"));
 }
