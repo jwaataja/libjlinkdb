@@ -25,7 +25,7 @@
 
 #include "link_entry.hh"
 
-namespace jlinkdb {
+namespace libjlinkdb {
 
 class Query {
 public:
@@ -33,6 +33,6 @@ public:
     virtual ~Query(){};
 };
 
-} // namespace jlinkdb
+} // namespace libjlinkdb
 
 #endif // JLINKDB_QUERY_H

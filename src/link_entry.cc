@@ -23,14 +23,14 @@
 #include "link_entry.hh"
 
 #include <string>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 
-namespace jlinkdb {
+namespace libjlinkdb {
 
 using std::string;
-using std::unordered_set;
 using std::unordered_map;
+using std::unordered_set;
 
 LinkEntry::LinkEntry(const string& location) : location_{ location }
 {
@@ -152,4 +152,4 @@ LinkEntry::clear_attributes()
     attributes_.clear();
 }
 
-} // namespace jlindb
+} // namespace libjlinkdb

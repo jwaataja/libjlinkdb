@@ -35,7 +35,7 @@
 #include "link_entry.hh"
 #include "query.hh"
 
-namespace jlinkdb {
+namespace libjlinkdb {
 
 class LinkDatabase {
 public:
@@ -87,6 +87,6 @@ private:
         const std::string& name, const std::string& content) const;
 };
 
-} // namespace jlinkdb
+} // namespace libjlinkdb
 
 #endif // JLINKDB_LINK_DATABASE_H

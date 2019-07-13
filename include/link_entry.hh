@@ -27,7 +27,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace jlinkdb {
+namespace libjlinkdb {
 
 class LinkEntry {
 public:
@@ -73,6 +73,6 @@ private:
     std::unordered_map<std::string, std::string> attributes_;
 };
 
-} // namespace jlinkdb
+} // namespace libjlinkdb
 
 #endif // JLINKDB_LINK_ENTRY_H

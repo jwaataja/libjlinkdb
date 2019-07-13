@@ -23,8 +23,8 @@
 #ifndef JLINKDB_JLINKDB_H
 #define JLINKDB_JLINKDB_H
 
+#include "link_database.hh"
 #include "link_entry.hh"
 #include "query.hh"
-#include "link_database.hh"
 
 #endif // JLINKDB_JLINKDB_H

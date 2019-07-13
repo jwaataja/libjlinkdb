@@ -37,7 +37,7 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-namespace jlinkdb {
+namespace libjlinkdb {
 
 LinkDatabase::LinkDatabase() : highest_id_(0)
 {
@@ -261,4 +261,4 @@ LinkDatabase::add_text_child_if_nonempty(xmlpp::Element* element,
         add_text_child(element, name, content);
 }
 
-} // namespace jlinkdb
+} // namespace libjlinkdb

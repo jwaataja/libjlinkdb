@@ -1,5 +1,5 @@
 include(AddGoogleTest)
 
-add_executable(jlinkdb_test jlinkdb_test.cc)
-target_link_libraries(jlinkdb_test jlinkdb gtest_main)
-add_test(jlinkdb_test jlinkdb_test)
+add_executable(libjlinkdb_test libjlinkdb_test.cc)
+target_link_libraries(libjlinkdb_test libjlinkdb gtest_main)
+add_test(libjlinkdb_test libjlinkdb_test)

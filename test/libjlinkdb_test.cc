@@ -32,10 +32,10 @@
 
 #include "gtest/gtest.h"
 
-#include "jlinkdb.hh"
+#include "libjlinkdb.hh"
 
-using jlinkdb::LinkDatabase;
-using jlinkdb::LinkEntry;
+using libjlinkdb::LinkDatabase;
+using libjlinkdb::LinkEntry;
 using std::begin;
 using std::end;
 using std::shared_ptr;
@@ -104,7 +104,7 @@ has_link(const T& links, const string& location)
         != links.end();
 }
 
-class FuncQuery : public jlinkdb::Query {
+class FuncQuery : public libjlinkdb::Query {
 public:
     FuncQuery(const std::function<bool(const LinkEntry&)>& func)
         : func_{ func }
@@ -284,8 +284,8 @@ TEST_F(LinkDatabaseTest, TestWriteFull)
     auto db = database_from_string(WITH_ATTRIBUTES);
     std::ostringstream writer;
     db.write_to_stream(writer);
-    std::istringstream reader{writer.str()};
-    LinkDatabase db_copy{reader};
+    std::istringstream reader{ writer.str() };
+    LinkDatabase db_copy{ reader };
     auto links = gather_links_ordered(db_copy);
     EXPECT_EQ(expected_entries_, links);
 }
