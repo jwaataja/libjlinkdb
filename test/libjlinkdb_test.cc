@@ -106,8 +106,7 @@ has_link(const T& links, const string& location)
 
 class FuncQuery : public libjlinkdb::Query {
 public:
-    FuncQuery(const std::function<bool(const LinkEntry&)>& func)
-        : func_{ func }
+    FuncQuery(const std::function<bool(const LinkEntry&)>& func) : func_{func}
     {
     }
 
@@ -125,7 +124,7 @@ query_func(
     const LinkDatabase& db, const std::function<bool(const LinkEntry&)>& func)
 {
     vector<shared_ptr<LinkEntry>> result;
-    auto query = db.query(FuncQuery{ func });
+    auto query = db.query(FuncQuery{func});
     std::transform(begin(query), end(query), std::back_inserter(result),
         [](const std::pair<int, shared_ptr<LinkEntry>>& entry) {
             return entry.second;
@@ -136,8 +135,8 @@ query_func(
 LinkDatabase
 database_from_string(const string& data_string)
 {
-    std::istringstream reader{ data_string };
-    return LinkDatabase{ reader };
+    std::istringstream reader{data_string};
+    return LinkDatabase{reader};
 }
 
 TEST(TestLinkEntry, TestConstructor)
@@ -152,15 +151,15 @@ TEST(TestLinkEntry, TestConstructor)
 
 TEST(TestLinkEntry, TestEquals)
 {
-    LinkEntry entry1{ "a" };
+    LinkEntry entry1{"a"};
     entry1.set_name("a");
     entry1.set_description("b");
 
-    LinkEntry entry2{ "a" };
+    LinkEntry entry2{"a"};
     entry2.set_name("b");
     entry2.set_description("a");
 
-    LinkEntry entry3{ "b" };
+    LinkEntry entry3{"b"};
     entry3.set_name("a");
     entry3.set_description("a");
 
@@ -181,7 +180,7 @@ protected:
         add_link(db1_, "a");
         add_link(db1_, "b");
         expected_entries_.push_back({});
-        LinkEntry link{ "https://gentoo.org" };
+        LinkEntry link{"https://gentoo.org"};
         link.set_name("MyName");
         link.set_description("My description.");
         link.add_tag("first tag");
@@ -284,8 +283,8 @@ TEST_F(LinkDatabaseTest, TestWriteFull)
     auto db = database_from_string(WITH_ATTRIBUTES);
     std::ostringstream writer;
     db.write_to_stream(writer);
-    std::istringstream reader{ writer.str() };
-    LinkDatabase db_copy{ reader };
+    std::istringstream reader{writer.str()};
+    LinkDatabase db_copy{reader};
     auto links = gather_links_ordered(db_copy);
     EXPECT_EQ(expected_entries_, links);
 }

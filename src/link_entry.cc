@@ -32,7 +32,7 @@ using std::string;
 using std::unordered_map;
 using std::unordered_set;
 
-LinkEntry::LinkEntry(const string& location) : location_{ location }
+LinkEntry::LinkEntry(const string& location) : location_{location}
 {
 }
 

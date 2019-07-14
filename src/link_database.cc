@@ -53,7 +53,7 @@ LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
 
 LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
 {
-    xmlpp::DomParser parser{ path };
+    xmlpp::DomParser parser{path};
     set_from_document(*parser.get_document());
 }
 
@@ -156,7 +156,7 @@ LinkDatabase::write_to_stream(std::ostream& writer) const
 void
 LinkDatabase::write_to_file(const string& path) const
 {
-    std::ofstream writer{ path };
+    std::ofstream writer{path};
 
     // TODO(jason): Error handling here.
 
@@ -241,8 +241,8 @@ LinkDatabase::parse_attribute_node(
         // throw exception
     }
 
-    string name{ node_text(name_nodes.front()) };
-    string value{ node_text(value_nodes.front()) };
+    string name{node_text(name_nodes.front())};
+    string value{node_text(value_nodes.front())};
     entry->set_attribute(name, value);
 }
 
