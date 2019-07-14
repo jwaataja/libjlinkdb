@@ -57,8 +57,8 @@ constexpr const char WITH_ATTRIBUTES[] =
     "<description>My description.</description>"
     "<tag>first tag</tag>"
     "<tag>second tag</tag>"
-    "<attribute name=\"ab\">12</attribute>"
-    "<attribute name=\"cd\">34</attribute>"
+    "<attribute><name>ab</name><value>12</value></attribute>"
+    "<attribute><name>cd</name><value>34</value></attribute>"
     "</link>"
     "<link></link>"
     "</links>";

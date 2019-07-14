@@ -146,8 +146,8 @@ LinkDatabase::write_to_stream(std::ostream& writer) const
 
         for (const auto& attribute : entry.second->attributes()) {
             auto attribute_element = child->add_child_element("attribute");
-            attribute_element->set_attribute("name", attribute.first);
-            attribute_element->add_child_text(attribute.second);
+            add_text_child(attribute_element, "name", attribute.first);
+            add_text_child(attribute_element, "value", attribute.second);
         }
     }
     document.write_to_stream(writer);
@@ -215,18 +215,35 @@ LinkDatabase::parse_link_node_child(
     else if (child->get_name() == "tag")
         entry->add_tag(node_text(child));
     else if (child->get_name() == "attribute") {
-        auto element = dynamic_cast<const xmlpp::Element*>(child);
-        if (element == nullptr) {
-            // throw exception
-        }
-
-        auto attribute = element->get_attribute("name");
-        if (attribute == nullptr) {
-            // throw exception
-        }
-
-        entry->set_attribute(attribute->get_value(), node_text(child));
+        parse_attribute_node(child, entry);
     }
+}
+
+void
+LinkDatabase::parse_attribute_node(
+    const xmlpp::Node* node, shared_ptr<LinkEntry> entry) const
+{
+    auto name_nodes = node->get_children("name");
+    if (name_nodes.empty()) {
+        // throw exception
+    }
+
+    if (name_nodes.size() > 1) {
+        // throw exception
+    }
+
+    auto value_nodes = node->get_children("value");
+    if (value_nodes.empty()) {
+        // throw exception
+    }
+
+    if (value_nodes.size() > 1) {
+        // throw exception
+    }
+
+    string name{ node_text(name_nodes.front()) };
+    string value{ node_text(value_nodes.front()) };
+    entry->set_attribute(name, value);
 }
 
 string
