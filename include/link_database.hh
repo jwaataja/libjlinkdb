@@ -23,6 +23,9 @@
 #ifndef JLINKDB_LINK_DATABASE_H
 #define JLINKDB_LINK_DATABASE_H
 
+#include <libxml++/libxml++.h>
+#include <sigc++/sigc++.h>
+
 #include <cstddef>
 #include <iostream>
 #include <memory>
@@ -31,7 +34,6 @@
 #include <utility>
 #include <vector>
 
-#include <libxml++/libxml++.h>
 #include "link_entry.hh"
 #include "query.hh"
 
@@ -71,9 +73,15 @@ public:
     void write_to_stream(std::ostream& writer) const;
     void write_to_file(const std::string& path) const;
 
+    sigc::signal<void, int>& signal_entry_added();
+    sigc::signal<void, int>& signal_entry_deleted();
+
 private:
     std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
     int highest_id_;
+
+    sigc::signal<void, int> entry_added_;
+    sigc::signal<void, int> entry_deleted_;
 
     void set_from_document(const xmlpp::Document& document);
     void parse_link_node(const xmlpp::Element* node);

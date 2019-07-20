@@ -23,6 +23,7 @@
 #include "link_database.hh"
 
 #include <libxml++/libxml++.h>
+#include <sigc++/sigc++.h>
 
 #include <algorithm>
 #include <cstddef>
@@ -109,13 +110,15 @@ LinkDatabase::add_entry(shared_ptr<LinkEntry> entry)
     int id = highest_id_;
     links_[id] = entry;
     ++highest_id_;
+    entry_added_(id);
     return id;
 }
 
 void
 LinkDatabase::delete_entry(int id)
 {
-    links_.erase(id);
+    if (links_.erase(id) > 0)
+        entry_deleted_(id);
 }
 
 vector<std::pair<int, shared_ptr<LinkEntry>>>
@@ -259,6 +262,18 @@ LinkDatabase::add_text_child_if_nonempty(xmlpp::Element* element,
 {
     if (!content.empty())
         add_text_child(element, name, content);
+}
+
+sigc::signal<void, int>&
+LinkDatabase::signal_entry_added()
+{
+    return entry_added_;
+}
+
+sigc::signal<void, int>&
+LinkDatabase::signal_entry_deleted()
+{
+    return entry_deleted_;
 }
 
 } // namespace libjlinkdb
