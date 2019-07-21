@@ -45,6 +45,7 @@ using std::unordered_set;
 using std::vector;
 
 constexpr const char EMPTY_LINKS[] = "<links></links>";
+constexpr const char BLANK_LINE[] = "<links>\n</links>";
 constexpr const char WITH_COMMENT[] = "<links><!-- --></links>";
 constexpr const char BASIC_LINK[] = "<links>"
                                     "<link></link>"
@@ -254,6 +255,12 @@ TEST_F(LinkDatabaseTest, TestQueryBasic)
 TEST_F(LinkDatabaseTest, TestEmptyXml)
 {
     auto db = database_from_string(EMPTY_LINKS);
+    EXPECT_EQ(0, db.links_count());
+}
+
+TEST_F(LinkDatabaseTest, TestBlankLine)
+{
+    auto db = database_from_string(BLANK_LINE);
     EXPECT_EQ(0, db.links_count());
 }
 

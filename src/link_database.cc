@@ -182,6 +182,11 @@ LinkDatabase::set_from_document(const xmlpp::Document& document)
             // throw exception
         }
 
+        // Ignore empty text nodes.
+        auto as_text = dynamic_cast<const xmlpp::TextNode*>(child);
+        if (as_text != nullptr && as_text->is_white_space())
+            continue;
+
         const xmlpp::Element* element =
             dynamic_cast<const xmlpp::Element*>(child);
         if (element != nullptr) {
