@@ -22,7 +22,6 @@
 
 #include "link_database.hh"
 
-#include <libxml++/libxml++.h>
 #include <sigc++/sigc++.h>
 
 #include <algorithm>
@@ -46,16 +45,10 @@ LinkDatabase::LinkDatabase() : highest_id_(0)
 
 LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
 {
-    xmlpp::DomParser parser;
-    // TODO(jason): Handle exceptions for next two lines.
-    parser.parse_stream(reader);
-    set_from_document(*parser.get_document());
 }
 
 LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
 {
-    xmlpp::DomParser parser{path};
-    set_from_document(*parser.get_document());
 }
 
 LinkDatabase::LinkEntryIterator
@@ -135,25 +128,6 @@ LinkDatabase::query(const Query& query) const
 void
 LinkDatabase::write_to_stream(std::ostream& writer) const
 {
-    xmlpp::Document document;
-    auto root = document.create_root_node("links");
-    for (const auto& entry : links_) {
-        auto child = root->add_child_element("link");
-        add_text_child_if_nonempty(
-            child, "location", entry.second->location());
-        add_text_child_if_nonempty(child, "name", entry.second->name());
-        add_text_child_if_nonempty(
-            child, "description", entry.second->description());
-        for (const auto& tag : entry.second->tags())
-            add_text_child(child, "tag", tag);
-
-        for (const auto& attribute : entry.second->attributes()) {
-            auto attribute_element = child->add_child_element("attribute");
-            add_text_child(attribute_element, "name", attribute.first);
-            add_text_child(attribute_element, "value", attribute.second);
-        }
-    }
-    document.write_to_stream(writer);
 }
 
 void
@@ -162,128 +136,7 @@ LinkDatabase::write_to_file(const string& path) const
     std::ofstream writer{path};
 
     // TODO(jason): Error handling here.
-
     write_to_stream(writer);
-}
-
-void
-LinkDatabase::set_from_document(const xmlpp::Document& document)
-{
-    const xmlpp::Element* root = document.get_root_node();
-    if (root->get_name() != "links") {
-        // throw exception
-    }
-
-    for (const auto& child : root->get_children()) {
-        if (dynamic_cast<const xmlpp::CommentNode*>(child) != nullptr)
-            continue;
-
-        if (child->get_name() != "link") {
-            // throw exception
-        }
-
-        // Ignore empty text nodes.
-        auto as_text = dynamic_cast<const xmlpp::TextNode*>(child);
-        if (as_text != nullptr && as_text->is_white_space())
-            continue;
-
-        const xmlpp::Element* element =
-            dynamic_cast<const xmlpp::Element*>(child);
-        if (element != nullptr) {
-            // throw exception
-        }
-
-        parse_link_node(element);
-    }
-}
-
-void
-LinkDatabase::parse_link_node(const xmlpp::Element* node)
-{
-    auto entry = std::make_shared<LinkEntry>();
-    for (const auto& child : node->get_children())
-        parse_link_node_child(child, entry);
-
-    add_entry(entry);
-}
-
-void
-LinkDatabase::parse_link_node_child(
-    const xmlpp::Node* child, shared_ptr<LinkEntry> entry) const
-{
-    if (dynamic_cast<const xmlpp::CommentNode*>(child) != nullptr)
-        return;
-
-    if (child->get_name() == "location")
-        entry->set_location(node_text(child));
-    else if (child->get_name() == "name")
-        entry->set_name(node_text(child));
-    else if (child->get_name() == "description")
-        entry->set_description(node_text(child));
-    else if (child->get_name() == "tag")
-        entry->add_tag(node_text(child));
-    else if (child->get_name() == "attribute") {
-        parse_attribute_node(child, entry);
-    }
-}
-
-void
-LinkDatabase::parse_attribute_node(
-    const xmlpp::Node* node, shared_ptr<LinkEntry> entry) const
-{
-    auto name_nodes = node->get_children("name");
-    if (name_nodes.empty()) {
-        // throw exception
-    }
-
-    if (name_nodes.size() > 1) {
-        // throw exception
-    }
-
-    auto value_nodes = node->get_children("value");
-    if (value_nodes.empty()) {
-        // throw exception
-    }
-
-    if (value_nodes.size() > 1) {
-        // throw exception
-    }
-
-    string name{node_text(name_nodes.front())};
-    string value{node_text(value_nodes.front())};
-    entry->set_attribute(name, value);
-}
-
-string
-LinkDatabase::node_text(const xmlpp::Node* node) const
-{
-    auto element = dynamic_cast<const xmlpp::Element*>(node);
-    if (element == nullptr) {
-        // throw exception
-    }
-
-    auto text = element->get_first_child_text();
-    if (text == nullptr) {
-        // throw exception
-    }
-
-    return text->get_content();
-}
-
-void
-LinkDatabase::add_text_child(xmlpp::Element* element, const std::string& name,
-    const std::string& content) const
-{
-    auto container = element->add_child_element(name);
-    container->add_child_text(content);
-}
-
-void
-LinkDatabase::add_text_child_if_nonempty(xmlpp::Element* element,
-    const std::string& name, const std::string& content) const
-{
-    if (!content.empty())
-        add_text_child(element, name, content);
 }
 
 sigc::signal<void, int>&

@@ -23,7 +23,6 @@
 #ifndef JLINKDB_LINK_DATABASE_H
 #define JLINKDB_LINK_DATABASE_H
 
-#include <libxml++/libxml++.h>
 #include <sigc++/sigc++.h>
 
 #include <cstddef>
@@ -82,19 +81,6 @@ private:
 
     sigc::signal<void, int> entry_added_;
     sigc::signal<void, int> entry_deleted_;
-
-    void set_from_document(const xmlpp::Document& document);
-    void parse_link_node(const xmlpp::Element* node);
-    void parse_link_node_child(
-        const xmlpp::Node* child, std::shared_ptr<LinkEntry> entry) const;
-    void parse_attribute_node(
-        const xmlpp::Node* node, std::shared_ptr<LinkEntry> entry) const;
-    std::string node_text(const xmlpp::Node* node) const;
-
-    void add_text_child(xmlpp::Element* element, const std::string& name,
-        const std::string& content) const;
-    void add_text_child_if_nonempty(xmlpp::Element* element,
-        const std::string& name, const std::string& content) const;
 };
 
 } // namespace libjlinkdb
