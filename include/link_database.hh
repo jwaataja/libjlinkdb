@@ -31,8 +31,8 @@
 #include <utility>
 #include <vector>
 
-#include <sigc++/sigc++.h>
 #include <nlohmann/json.hpp>
+#include <sigc++/sigc++.h>
 
 #include "link_entry.hh"
 #include "query.hh"

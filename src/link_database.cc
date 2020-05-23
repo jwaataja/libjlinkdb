@@ -30,14 +30,14 @@
 #include <string>
 #include <utility>
 
-#include <sigc++/sigc++.h>
 #include <nlohmann/json.hpp>
+#include <sigc++/sigc++.h>
 
+using nlohmann::json;
 using std::shared_ptr;
 using std::string;
 using std::unique_ptr;
 using std::vector;
-using nlohmann::json;
 
 namespace libjlinkdb {
 
@@ -169,16 +169,17 @@ LinkDatabase::signal_entry_deleted()
     return entry_deleted_;
 }
 
-void to_json(json& j, const LinkEntry& link) {
-    j = {{"location", link.location()},
-        {"name", link.name()},
-        {"description", link.description()},
-        {"tags", link.tags()},
-        {"attributes", link.attributes()}
-    };
+void
+to_json(json& j, const LinkEntry& link)
+{
+    j = {{"location", link.location()}, {"name", link.name()},
+        {"description", link.description()}, {"tags", link.tags()},
+        {"attributes", link.attributes()}};
 }
 
-void from_json(const json& j, LinkEntry& link) {
+void
+from_json(const json& j, LinkEntry& link)
+{
     auto location = j.find("location");
     if (location != j.end()) {
         link.set_location(location->get<string>());
@@ -204,23 +205,27 @@ void from_json(const json& j, LinkEntry& link) {
     auto attributes = j.find("attributes");
     if (attributes != j.end()) {
         for (const auto& attribute : attributes->items()) {
-            link.set_attribute(attribute.key(),
-                attribute.value().get<string>());
+            link.set_attribute(
+                attribute.key(), attribute.value().get<string>());
         }
     }
 }
 
-void to_json(json& j, const LinkDatabase& database) {
+void
+to_json(json& j, const LinkDatabase& database)
+{
     auto links = json::array();
-    for (auto it = database.links_cbegin(); it != database.links_cend(); ++it)
-    {
+    for (auto it = database.links_cbegin(); it != database.links_cend();
+         ++it) {
         links.push_back(*it->second);
     }
 
     j = {"links", links};
 }
 
-void from_json(const json& j, LinkDatabase& database) {
+void
+from_json(const json& j, LinkDatabase& database)
+{
     for (const auto& link : j.at("links")) {
         auto entry = std::make_shared<LinkEntry>();
         /* link.get_to(*entry); */
