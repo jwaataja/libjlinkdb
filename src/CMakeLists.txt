@@ -6,7 +6,7 @@ add_library(
 
 target_compile_features(libjlinkdb PUBLIC cxx_std_11)
 set_target_properties(libjlinkdb PROPERTIES CXX_EXTENSIONS OFF)
-target_compile_options(libjlinkdb PRIVATE -Wall -Wextra)
+target_compile_options(libjlinkdb PRIVATE -Werror -Wall -Wextra)
 
 target_include_directories(libjlinkdb
 	PUBLIC
@@ -19,6 +19,4 @@ target_link_libraries(libjlinkdb
 	${GLIBMM_LIBRARIES}
 	${LIBSIGCPP_LIBRARIES})
 
-target_link_libraries(libjlinkdb
-	PUBLIC
-	nlohmann_json::nlohmann_json)
+target_link_libraries(libjlinkdb PUBLIC nlohmann_json::nlohmann_json)
