@@ -22,33 +22,50 @@
 
 #include "link_database.hh"
 
-#include <sigc++/sigc++.h>
-
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
-#include <iostream>
 #include <iterator>
 #include <memory>
 #include <string>
 #include <utility>
 
+#include <sigc++/sigc++.h>
+#include <nlohmann/json.hpp>
+
 using std::shared_ptr;
 using std::string;
+using std::unique_ptr;
 using std::vector;
+using nlohmann::json;
 
 namespace libjlinkdb {
 
-LinkDatabase::LinkDatabase() : highest_id_(0)
+// Conversions.
+void to_json(json& j, const LinkEntry& link);
+void from_json(const json& j, LinkEntry& link);
+
+void to_json(json& j, const LinkDatabase& database);
+void from_json(const json& j, LinkDatabase& database);
+
+LinkDatabase::LinkDatabase()
 {
 }
 
 LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
 {
+    json data;
+    reader >> data;
+    data.get_to(*this);
 }
 
 LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
 {
+    // TODO(Jason): Error handling?
+    std::ifstream reader{path};
+    json data;
+    reader >> data;
+    data.get_to(*this);
 }
 
 LinkDatabase::LinkEntryIterator
@@ -128,6 +145,8 @@ LinkDatabase::query(const Query& query) const
 void
 LinkDatabase::write_to_stream(std::ostream& writer) const
 {
+    json data{*this};
+    writer << data;
 }
 
 void
@@ -135,7 +154,6 @@ LinkDatabase::write_to_file(const string& path) const
 {
     std::ofstream writer{path};
 
-    // TODO(jason): Error handling here.
     write_to_stream(writer);
 }
 
@@ -149,6 +167,66 @@ sigc::signal<void, int>&
 LinkDatabase::signal_entry_deleted()
 {
     return entry_deleted_;
+}
+
+void to_json(json& j, const LinkEntry& link) {
+    j = {{"location", link.location()},
+        {"name", link.name()},
+        {"description", link.description()},
+        {"tags", link.tags()},
+        {"attributes", link.attributes()}
+    };
+}
+
+void from_json(const json& j, LinkEntry& link) {
+    auto location = j.find("location");
+    if (location != j.end()) {
+        link.set_location(location->get<string>());
+    }
+
+    auto name = j.find("name");
+    if (name != j.end()) {
+        link.set_name(name->get<string>());
+    }
+
+    auto description = j.find("description");
+    if (description != j.end()) {
+        link.set_description(description->get<string>());
+    }
+
+    auto tags = j.find("tags");
+    if (tags != j.end()) {
+        for (const auto& tag : *tags) {
+            link.add_tag(tag.get<string>());
+        }
+    }
+
+    auto attributes = j.find("attributes");
+    if (attributes != j.end()) {
+        for (const auto& attribute : attributes->items()) {
+            link.set_attribute(attribute.key(),
+                attribute.value().get<string>());
+        }
+    }
+}
+
+void to_json(json& j, const LinkDatabase& database) {
+    auto links = json::array();
+    for (auto it = database.links_cbegin(); it != database.links_cend(); ++it)
+    {
+        links.push_back(*it->second);
+    }
+
+    j = {"links", links};
+}
+
+void from_json(const json& j, LinkDatabase& database) {
+    for (const auto& link : j.at("links")) {
+        auto entry = std::make_shared<LinkEntry>();
+        /* link.get_to(*entry); */
+        from_json(link, *entry);
+        database.add_entry(entry);
+    }
 }
 
 } // namespace libjlinkdb

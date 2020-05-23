@@ -20,5 +20,5 @@ target_link_libraries(libjlinkdb
 	${LIBSIGCPP_LIBRARIES})
 
 target_link_libraries(libjlinkdb
-	PRIVATE
+	PUBLIC
 	nlohmann_json::nlohmann_json)

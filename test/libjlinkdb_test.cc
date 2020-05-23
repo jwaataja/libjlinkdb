@@ -44,25 +44,27 @@ using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
-constexpr const char EMPTY_LINKS[] = "<links></links>";
-constexpr const char BLANK_LINE[] = "<links>\n</links>";
-constexpr const char WITH_COMMENT[] = "<links><!-- --></links>";
-constexpr const char BASIC_LINK[] = "<links>"
-                                    "<link></link>"
-                                    "</links>";
+constexpr const char EMPTY_LINKS[] = "{ \"links\": [] }";
+constexpr const char BLANK_LINE[] = "{ \"links\":\n[] }";
+constexpr const char BASIC_LINK[] = "{ \"links\": [ { } ] }";
 constexpr const char WITH_ATTRIBUTES[] =
-    "<links>"
-    "<link>"
-    "<location>https://gentoo.org</location>"
-    "<name>MyName</name>"
-    "<description>My description.</description>"
-    "<tag>first tag</tag>"
-    "<tag>second tag</tag>"
-    "<attribute><name>ab</name><value>12</value></attribute>"
-    "<attribute><name>cd</name><value>34</value></attribute>"
-    "</link>"
-    "<link></link>"
-    "</links>";
+    "{ \"links\": ["
+    "{"
+    "\"location\": \"https://gentoo.org\","
+    "\"name\": \"MyName\","
+    "\"description\": \"My description.\","
+    "\"tags\": ["
+    "\"first tag\","
+    "\"second tag\""
+    "],"
+    "\"attributes\": {"
+    "\"ab\": \"12\","
+    "\"cd\": \"34\""
+    "}"
+    "},"
+    "{ }"
+    "]"
+    "}";
 
 void
 add_link(LinkDatabase& db, const string& link)
@@ -261,12 +263,6 @@ TEST_F(LinkDatabaseTest, TestEmptyXml)
 TEST_F(LinkDatabaseTest, TestBlankLine)
 {
     auto db = database_from_string(BLANK_LINE);
-    EXPECT_EQ(0, db.links_count());
-}
-
-TEST_F(LinkDatabaseTest, TestIgnoreComment)
-{
-    auto db = database_from_string(WITH_COMMENT);
     EXPECT_EQ(0, db.links_count());
 }
 

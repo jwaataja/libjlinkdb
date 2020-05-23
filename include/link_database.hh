@@ -23,8 +23,6 @@
 #ifndef JLINKDB_LINK_DATABASE_H
 #define JLINKDB_LINK_DATABASE_H
 
-#include <sigc++/sigc++.h>
-
 #include <cstddef>
 #include <iostream>
 #include <memory>
@@ -32,6 +30,9 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
+#include <sigc++/sigc++.h>
+#include <nlohmann/json.hpp>
 
 #include "link_entry.hh"
 #include "query.hh"
@@ -77,7 +78,7 @@ public:
 
 private:
     std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
-    int highest_id_;
+    int highest_id_ = 0;
 
     sigc::signal<void, int> entry_added_;
     sigc::signal<void, int> entry_deleted_;
