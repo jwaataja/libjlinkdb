@@ -21,11 +21,11 @@
 #ifndef LIBJLINKDB_CONTAINS_QUERY_H
 #define LIBJLINKDB_CONTAINS_QUERY_H
 
-#include <vector>
 #include <unordered_set>
+#include <vector>
 
-#include "query.hh"
 #include "link_entry.hh"
+#include "query.hh"
 
 namespace libjlinkdb {
 
@@ -42,8 +42,8 @@ public:
 private:
     std::vector<std::string> terms_;
 
-    bool entry_contains_term(const LinkEntry& entry, const std::string& term)
-        const;
+    bool entry_contains_term(
+        const LinkEntry& entry, const std::string& term) const;
 };
 } // namespace libjlinkdb
 

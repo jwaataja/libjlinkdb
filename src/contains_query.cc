@@ -20,10 +20,10 @@
 
 #include "contains_query.hh"
 
-#include <iterator>
 #include <algorithm>
-#include <vector>
+#include <iterator>
 #include <string>
+#include <vector>
 
 #include "link_entry.hh"
 
@@ -31,14 +31,13 @@ namespace libjlinkdb {
 
 using std::string;
 
-ContainsQuery::ContainsQuery(const std::vector<string>& terms) :
-    terms_{terms}
+ContainsQuery::ContainsQuery(const std::vector<string>& terms) : terms_{terms}
 {
 }
 
 bool
-ContainsQuery::entry_contains_term(const LinkEntry& entry, const
-    string& term) const
+ContainsQuery::entry_contains_term(
+    const LinkEntry& entry, const string& term) const
 {
     if (entry.location().find(term) != string::npos) {
         return true;
@@ -52,17 +51,18 @@ ContainsQuery::entry_contains_term(const LinkEntry& entry, const
         return true;
     }
 
-    if (std::any_of(std::begin(entry.tags()), std::end(entry.tags()), [&](const
-                std::string& tag) { return tag.find(term) != string::npos; }))
-        {
-            return true;
-        }
+    if (std::any_of(std::begin(entry.tags()), std::end(entry.tags()),
+            [&](const std::string& tag) {
+                return tag.find(term) != string::npos;
+            })) {
+        return true;
+    }
 
     if (std::any_of(std::begin(entry.attributes()),
-            std::end(entry.attributes()), [&](const std::pair<std::string,
-                std::string>& item) {
-            return item.first.find(term) != string::npos ||
-            item.second.find(term) != string::npos;
+            std::end(entry.attributes()),
+            [&](const std::pair<std::string, std::string>& item) {
+                return item.first.find(term) != string::npos
+                    || item.second.find(term) != string::npos;
             })) {
         return true;
     }
