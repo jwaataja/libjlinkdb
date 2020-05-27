@@ -60,14 +60,22 @@ public:
     ConstLinkEntryIterator links_cbegin() const;
     ConstLinkEntryIterator links_cend() const;
 
+    // Returns the number of links in the database.
     std::size_t links_count() const;
+    // Returns whether there exists a link entry with the given id.
     bool has_entry(int id) const;
+    // Returns the entry with the given id if it exists, and a null pointer
+    // otherwise.
     std::shared_ptr<LinkEntry> get_entry(int id) const;
     // Returns the new id.
     int add_entry(std::shared_ptr<LinkEntry> entry);
+    // Deletes the entry with the given id.
     void delete_entry(int id);
 
-    std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> query(
+    // Returns the collection of entries in the database that match query. Each
+    // element of the result is a pair containing the id of the entry and the
+    // entry itself.
+    std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> search(
         const Query& query) const;
 
     void write_to_stream(std::ostream& writer) const;

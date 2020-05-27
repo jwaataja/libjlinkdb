@@ -132,7 +132,7 @@ LinkDatabase::delete_entry(int id)
 }
 
 vector<std::pair<int, shared_ptr<LinkEntry>>>
-LinkDatabase::query(const Query& query) const
+LinkDatabase::search(const Query& query) const
 {
     vector<std::pair<int, shared_ptr<LinkEntry>>> result;
     std::copy_if(links_.begin(), links_.end(), std::back_inserter(result),

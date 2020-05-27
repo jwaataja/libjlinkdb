@@ -29,10 +29,19 @@
 
 namespace libjlinkdb {
 
+using std::begin;
+using std::end;
 using std::string;
 
 ContainsQuery::ContainsQuery(const std::vector<string>& terms) : terms_{terms}
 {
+}
+
+bool
+ContainsQuery::matches(const LinkEntry& entry) const
+{
+    return std::any_of(begin(terms_), end(terms_),
+        [&](const string& term) { return entry_contains_term(entry, term); });
 }
 
 bool
@@ -51,15 +60,14 @@ ContainsQuery::entry_contains_term(
         return true;
     }
 
-    if (std::any_of(std::begin(entry.tags()), std::end(entry.tags()),
+    if (std::any_of(begin(entry.tags()), end(entry.tags()),
             [&](const std::string& tag) {
                 return tag.find(term) != string::npos;
             })) {
         return true;
     }
 
-    if (std::any_of(std::begin(entry.attributes()),
-            std::end(entry.attributes()),
+    if (std::any_of(begin(entry.attributes()), end(entry.attributes()),
             [&](const std::pair<std::string, std::string>& item) {
                 return item.first.find(term) != string::npos
                     || item.second.find(term) != string::npos;

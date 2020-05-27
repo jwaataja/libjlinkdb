@@ -33,10 +33,12 @@ namespace libjlinkdb {
 // search terms in any of its fields.
 class ContainsQuery : public Query {
 public:
+    // Constructs a query with no terms that will match nothing.
     ContainsQuery() = default;
     // Contstructs a query with the given terms. Duplicates are ignored.
     explicit ContainsQuery(const std::vector<std::string>& terms);
 
+    // Returns whether any field in entry contains any of the search terms.
     bool matches(const LinkEntry& entry) const override;
 
 private:

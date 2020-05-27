@@ -34,6 +34,7 @@
 
 #include "libjlinkdb.hh"
 
+using libjlinkdb::ContainsQuery;
 using libjlinkdb::LinkDatabase;
 using libjlinkdb::LinkEntry;
 using std::begin;
@@ -127,7 +128,7 @@ query_func(
     const LinkDatabase& db, const std::function<bool(const LinkEntry&)>& func)
 {
     vector<shared_ptr<LinkEntry>> result;
-    auto query = db.query(FuncQuery{func});
+    auto query = db.search(FuncQuery{func});
     std::transform(begin(query), end(query), std::back_inserter(result),
         [](const std::pair<int, shared_ptr<LinkEntry>>& entry) {
             return entry.second;
@@ -290,6 +291,57 @@ TEST_F(LinkDatabaseTest, TestWriteFull)
     LinkDatabase db_copy{reader};
     auto links = gather_links_ordered(db_copy);
     EXPECT_EQ(expected_entries_, links);
+}
+
+TEST_F(LinkDatabaseTest, TestSearchBasic)
+{
+}
+
+class ContainsQueryTest : public ::testing::Test {
+protected:
+    void SetUp() override
+    {
+        entry1_.set_location("abc def ghi");
+        entry2_.set_name("abc def ghi");
+        entry3_.set_description("abc def ghi");
+        entry3_.add_tag("abc");
+        entry3_.add_tag("def");
+        entry3_.add_tag("ghi");
+        entry4_.set_attribute("abc", "def");
+        entry4_.set_attribute("ghi", "jkl");
+        entry5_.set_location("ab");
+        entry5_.set_name("ab");
+        entry5_.add_tag("ab");
+        entry5_.set_attribute("ab", "xy");
+    }
+
+    ContainsQuery query_{{"abc", "xyz"}};
+
+    LinkEntry entry1_;
+    LinkEntry entry2_;
+    LinkEntry entry3_;
+    LinkEntry entry4_;
+    LinkEntry entry5_;
+};
+
+TEST_F(ContainsQueryTest, TestContainsQueryEmpty)
+{
+    LinkEntry entry;
+    ContainsQuery query;
+    EXPECT_FALSE(query.matches(entry));
+}
+
+TEST_F(ContainsQueryTest, TestContainsQueryPositive)
+{
+    EXPECT_TRUE(query_.matches(entry1_));
+    EXPECT_TRUE(query_.matches(entry2_));
+    EXPECT_TRUE(query_.matches(entry3_));
+    EXPECT_TRUE(query_.matches(entry4_));
+}
+
+TEST_F(ContainsQueryTest, TestContainsQueryNegative)
+{
+    EXPECT_FALSE(query_.matches(entry5_));
 }
 
 int
