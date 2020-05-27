@@ -2,7 +2,8 @@ add_library(
 	libjlinkdb
 	STATIC
 	link_entry.cc
-	link_database.cc)
+	link_database.cc
+	contains_query.cc)
 
 target_compile_features(libjlinkdb PUBLIC cxx_std_11)
 set_target_properties(libjlinkdb PROPERTIES CXX_EXTENSIONS OFF)
