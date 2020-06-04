@@ -1,6 +1,6 @@
 target_sources(
 	libjlinkdb
-	PUBLIC
+	PRIVATE
 	and.cc
 	attribute_query.cc
 	description_extractor.cc
