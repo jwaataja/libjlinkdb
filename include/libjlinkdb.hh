@@ -23,7 +23,20 @@
 
 #include "link_database.hh"
 #include "link_entry.hh"
+#include "query/and.hh"
+#include "query/and_collection.hh"
+#include "query/attribute_contains_query.hh"
+#include "query/attribute_query.hh"
 #include "query/contains_query.hh"
+#include "query/description_extractor.hh"
+#include "query/field_query.hh"
+#include "query/location_extractor.hh"
+#include "query/name_extractor.hh"
+#include "query/or.hh"
+#include "query/or_collection.hh"
 #include "query/query.hh"
+#include "query/string_search_options.hh"
+#include "query/tag_query.hh"
+#include "string_utils.hh"
 
 #endif // JLINKDB_JLINKDB_H
