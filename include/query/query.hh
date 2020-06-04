@@ -25,6 +25,8 @@
 
 namespace libjlinkdb {
 
+namespace query {
+
 // An operation that either accepts or rejects a link.
 class Query {
 public:
@@ -32,6 +34,8 @@ public:
     virtual bool matches(const LinkEntry& entry) const = 0;
     virtual ~Query(){};
 };
+
+} // namespace query
 
 } // namespace libjlinkdb
 

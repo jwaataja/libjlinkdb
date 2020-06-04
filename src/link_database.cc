@@ -32,6 +32,7 @@
 #include <sigc++/sigc++.h>
 
 #include "link_entry.hh"
+#include "query/query.hh"
 
 using nlohmann::json;
 using std::shared_ptr;
@@ -132,7 +133,7 @@ LinkDatabase::delete_entry(int id)
 }
 
 vector<std::pair<int, shared_ptr<LinkEntry>>>
-LinkDatabase::search(const Query& query) const
+LinkDatabase::search(const query::Query& query) const
 {
     vector<std::pair<int, shared_ptr<LinkEntry>>> result;
     std::copy_if(links_.begin(), links_.end(), std::back_inserter(result),

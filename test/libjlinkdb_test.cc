@@ -109,7 +109,7 @@ has_link(const T& links, const string& location)
         != links.end();
 }
 
-class FuncQuery : public libjlinkdb::Query {
+class FuncQuery : public libjlinkdb::query::Query {
 public:
     FuncQuery(const std::function<bool(const LinkEntry&)>& func) : func_{func}
     {

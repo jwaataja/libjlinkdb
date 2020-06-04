@@ -74,7 +74,7 @@ public:
     // element of the result is a pair containing the id of the entry and the
     // entry itself.
     std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> search(
-        const Query& query) const;
+        const query::Query& query) const;
 
     void write_to_stream(std::ostream& writer) const;
     void write_to_file(const std::string& path) const;
