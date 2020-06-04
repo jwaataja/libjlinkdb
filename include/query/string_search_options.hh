@@ -25,8 +25,12 @@ namespace libjlinkdb {
 
 namespace query {
 
+// Options for searching strings.
 struct StringSearchOptions {
+    // If true, the search should succeed if and only if the whole search
+    // string matches the target.
     bool match_full_string;
+    // If true, the search should ignore case entirely.
     bool ignore_case;
 };
 

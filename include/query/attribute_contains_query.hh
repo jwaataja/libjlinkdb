@@ -31,11 +31,16 @@ namespace libjlinkdb {
 
 namespace query {
 
+// A query that searches over all attributes of a link and matches if either
+// the key or value of any attribute contains a search term.
 class AttributeContainsQuery : public Query {
 public:
+    // Constructs a query that searches for term with the given search options.
     AttributeContainsQuery(
         const std::string& term, const StringSearchOptions& options);
 
+    // Returns true if and only if any attribute in entry has a name or value
+    // that matches the search term, according to the query's search options.
     bool matches(const LinkEntry& entry) const override;
 
 private:

@@ -31,13 +31,20 @@ namespace libjlinkdb {
 
 namespace query {
 
+// A query with a collection of subqueries that matches if and only if at least
+// one query in the collection matches.
 class OrCollection : public Query {
 public:
+    // Constructs an empty collection.
     OrCollection() = default;
+    // Constructs a collection containing all queries in the range [first,
+    // last). The iterator should point to type shared_ptr<Query>.
     template <typename InputIterator>
     OrCollection(InputIterator first, InputIterator last);
+    // Constructs a collection containing all queries listed in queries.
     OrCollection(const std::vector<std::shared_ptr<Query>>& queries);
 
+    // Returns true if and only if every query in the collection matches entry.
     bool matches(const LinkEntry& entry) const override;
 
 private:

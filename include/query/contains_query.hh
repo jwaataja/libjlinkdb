@@ -39,7 +39,8 @@ class ContainsQuery : public Query {
 public:
     // Constructs a query with no terms that will match nothing.
     ContainsQuery() = default;
-    // Contstructs a query with the given terms. Duplicates are ignored.
+    // Contstructs a query with the given terms and search options. Duplicates
+    // are ignored.
     explicit ContainsQuery(const std::vector<std::string>& terms,
         const StringSearchOptions& options);
 

@@ -27,8 +27,11 @@
 
 namespace libjlinkdb {
 
+// Replaces the contents of str so that it only contains lower case characters.
 void to_lower_in_place(std::string& str);
 
+// Searchs str for target and return whether it was found. The search obeys the
+// parameters in options.
 bool search_string(const std::string& str, const std::string& target,
     const query::StringSearchOptions& options);
 

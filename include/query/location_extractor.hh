@@ -29,8 +29,10 @@ namespace libjlinkdb {
 
 namespace query {
 
+// Extracts the location of a link.
 class LocationExtractor {
 public:
+    // Returns the location of an entry.
     std::string operator()(const LinkEntry& entry) const;
 };
 

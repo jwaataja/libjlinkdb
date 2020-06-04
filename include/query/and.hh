@@ -30,10 +30,13 @@ namespace libjlinkdb {
 
 namespace query {
 
+// Query that matches an entry if and only if two subqueries match.
 class And : public Query {
 public:
+    // Constructs a query that matches if and only if q1 and q2 match.
     And(const std::shared_ptr<Query>& q1, const std::shared_ptr<Query>& q2);
 
+    // Returns true if and only if both subqueries match entry.
     bool matches(const LinkEntry& entry) const override;
 
 private:
