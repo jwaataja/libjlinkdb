@@ -35,7 +35,7 @@
 #include <sigc++/sigc++.h>
 
 #include "link_entry.hh"
-#include "query.hh"
+#include "query/query.hh"
 
 namespace libjlinkdb {
 

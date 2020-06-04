@@ -1,0 +1,14 @@
+target_sources(
+	libjlinkdb
+	PUBLIC
+	and.cc
+	attribute_query.cc
+	description_extractor.cc
+	location_extractor.cc
+	attribute_contains_query.cc
+	name_extractor.cc
+	tag_query.cc
+	or.cc
+	and_collection.cc
+	or_collection.cc
+	contains_query.cc)

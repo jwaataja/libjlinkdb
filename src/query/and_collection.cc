@@ -18,64 +18,37 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#include "contains_query.hh"
+#include "query/and_collection.hh"
 
 #include <algorithm>
 #include <iterator>
-#include <string>
+#include <memory>
 #include <vector>
 
 #include "link_entry.hh"
+#include "query/query.hh"
 
 namespace libjlinkdb {
 
+namespace query {
+
 using std::begin;
 using std::end;
-using std::string;
+using std::shared_ptr;
+using std::vector;
 
-ContainsQuery::ContainsQuery(const std::vector<string>& terms) : terms_{terms}
+AndCollection::AndCollection(const vector<shared_ptr<Query>>& queries)
+    : queries_{queries}
 {
 }
 
 bool
-ContainsQuery::matches(const LinkEntry& entry) const
+AndCollection::matches(const LinkEntry& entry) const
 {
-    return std::any_of(begin(terms_), end(terms_),
-        [&](const string& term) { return entry_contains_term(entry, term); });
+    return std::all_of(begin(queries_), end(queries_),
+        [&](const shared_ptr<Query>& query) { return query->matches(entry); });
 }
 
-bool
-ContainsQuery::entry_contains_term(
-    const LinkEntry& entry, const string& term) const
-{
-    if (entry.location().find(term) != string::npos) {
-        return true;
-    }
-
-    if (entry.name().find(term) != string::npos) {
-        return true;
-    }
-
-    if (entry.description().find(term) != string::npos) {
-        return true;
-    }
-
-    if (std::any_of(begin(entry.tags()), end(entry.tags()),
-            [&](const std::string& tag) {
-                return tag.find(term) != string::npos;
-            })) {
-        return true;
-    }
-
-    if (std::any_of(begin(entry.attributes()), end(entry.attributes()),
-            [&](const std::pair<std::string, std::string>& item) {
-                return item.first.find(term) != string::npos
-                    || item.second.find(term) != string::npos;
-            })) {
-        return true;
-    }
-
-    return false;
-}
+} // namespace query
 
 } // namespace libjlinkdb

@@ -3,7 +3,7 @@ add_library(
 	STATIC
 	link_entry.cc
 	link_database.cc
-	contains_query.cc)
+	string_utils.cc)
 
 target_compile_features(libjlinkdb PUBLIC cxx_std_11)
 set_target_properties(libjlinkdb PROPERTIES CXX_EXTENSIONS OFF)
@@ -21,3 +21,5 @@ target_link_libraries(libjlinkdb
 	${LIBSIGCPP_LIBRARIES})
 
 target_link_libraries(libjlinkdb PUBLIC nlohmann_json::nlohmann_json)
+
+add_subdirectory(query)

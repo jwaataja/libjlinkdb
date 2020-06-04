@@ -18,35 +18,40 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_CONTAINS_QUERY_H
-#define LIBJLINKDB_CONTAINS_QUERY_H
+#ifndef LIBJLINKDB_QUERY_AND_COLLECTION_H
+#define LIBJLINKDB_QUERY_AND_COLLECTION_H
 
-#include <unordered_set>
+#include <memory>
 #include <vector>
 
 #include "link_entry.hh"
-#include "query.hh"
+#include "query/query.hh"
 
 namespace libjlinkdb {
 
-// A query with search terms that matches an entry if it contains one of the
-// search terms in any of its fields.
-class ContainsQuery : public Query {
-public:
-    // Constructs a query with no terms that will match nothing.
-    ContainsQuery() = default;
-    // Contstructs a query with the given terms. Duplicates are ignored.
-    explicit ContainsQuery(const std::vector<std::string>& terms);
+namespace query {
 
-    // Returns whether any field in entry contains any of the search terms.
+class AndCollection : public Query {
+public:
+    AndCollection() = default;
+    template <typename InputIterator>
+    AndCollection(InputIterator first, InputIterator last);
+    AndCollection(const std::vector<std::shared_ptr<Query>>& queries);
+
     bool matches(const LinkEntry& entry) const override;
 
 private:
-    std::vector<std::string> terms_;
-
-    bool entry_contains_term(
-        const LinkEntry& entry, const std::string& term) const;
+    std::vector<std::shared_ptr<Query>> queries_;
 };
+
+template <typename InputIterator>
+AndCollection::AndCollection(InputIterator first, InputIterator last)
+    : queries_{first, last}
+{
+}
+
+} // namespace query
+
 } // namespace libjlinkdb
 
-#endif // LIBJLINKDB_CONTAINS_QUERY_H
+#endif // LIBJLINKDB_QUERY_AND_COLLECTION_H

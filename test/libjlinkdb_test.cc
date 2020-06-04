@@ -34,9 +34,10 @@
 
 #include "libjlinkdb.hh"
 
-using libjlinkdb::ContainsQuery;
 using libjlinkdb::LinkDatabase;
 using libjlinkdb::LinkEntry;
+using libjlinkdb::query::ContainsQuery;
+using libjlinkdb::query::StringSearchOptions;
 using std::begin;
 using std::end;
 using std::shared_ptr;
@@ -315,7 +316,7 @@ protected:
         entry5_.set_attribute("ab", "xy");
     }
 
-    ContainsQuery query_{{"abc", "xyz"}};
+    ContainsQuery query_{{"abc", "xyz"}, {false, true}};
 
     LinkEntry entry1_;
     LinkEntry entry2_;

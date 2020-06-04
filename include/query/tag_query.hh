@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Jason Waataja
+ * Copyright (c) 2020 Jason Waataja
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -20,19 +20,32 @@
  * IN THE SOFTWARE.
  */
 
-#ifndef JLINKDB_QUERY_H
-#define JLINKDB_QUERY_H
+#ifndef LIBJLINKDB_QUERY_TAG_QUERY_H
+#define LIBJLINKDB_QUERY_TAG_QUERY_H
+
+#include <string>
 
 #include "link_entry.hh"
+#include "query/query.hh"
+#include "query/string_search_options.hh"
 
 namespace libjlinkdb {
 
-class Query {
+namespace query {
+
+class TagQuery : public Query {
 public:
-    virtual bool matches(const LinkEntry& entry) const = 0;
-    virtual ~Query(){};
+    TagQuery(const std::string& term, const StringSearchOptions& options);
+
+    bool matches(const LinkEntry& entry) const override;
+
+private:
+    std::string term_;
+    StringSearchOptions options_;
 };
+
+} // namespace query
 
 } // namespace libjlinkdb
 
-#endif // JLINKDB_QUERY_H
+#endif // LIBJLINKDB_QUERY_TAG_QUERY_H
