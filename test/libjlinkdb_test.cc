@@ -256,7 +256,7 @@ TEST_F(LinkDatabaseTest, TestQueryBasic)
     EXPECT_TRUE(has_link(links, "a"));
 }
 
-TEST_F(LinkDatabaseTest, TestEmptyXml)
+TEST_F(LinkDatabaseTest, TestEmptyLinks)
 {
     auto db = database_from_string(EMPTY_LINKS);
     EXPECT_EQ(0, db.links_count());
@@ -293,6 +293,29 @@ TEST_F(LinkDatabaseTest, TestWriteFull)
     auto links = gather_links_ordered(db_copy);
     EXPECT_EQ(expected_entries_, links);
 }
+
+TEST_F(LinkDatabaseTest, TestReadEmptyStream)
+{
+    ASSERT_THROW(database_from_string(""), libjlinkdb::JLinkDbError);
+}
+
+TEST_F(LinkDatabaseTest, TestReadNoLink)
+{
+    ASSERT_THROW(database_from_string("{}"), libjlinkdb::JLinkDbError);
+}
+
+TEST_F(LinkDatabaseTest, TestMalformedData)
+{
+    ASSERT_THROW(
+        database_from_string("{ \"links\": {}"), libjlinkdb::JLinkDbError);
+}
+
+TEST_F(LinkDatabaseTest, TestExtraneousFieldsAllowed)
+{
+    ASSERT_NO_THROW(database_from_string(
+        "{ \"links\": { \"dummy1\": \"a\" }, \"dummy2\": \"b\" }"));
+}
+
 
 TEST_F(LinkDatabaseTest, TestSearchBasic)
 {

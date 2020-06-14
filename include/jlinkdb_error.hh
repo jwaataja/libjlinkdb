@@ -18,26 +18,21 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef JLINKDB_JLINKDB_H
-#define JLINKDB_JLINKDB_H
+#ifndef LIBJLINKDB_JLINKDB_ERROR_H
+#define LIBJLINKDB_JLINKDB_ERROR_H
 
-#include "jlinkdb_error.hh"
-#include "link_database.hh"
-#include "link_entry.hh"
-#include "query/and.hh"
-#include "query/and_collection.hh"
-#include "query/attribute_contains_query.hh"
-#include "query/attribute_query.hh"
-#include "query/contains_query.hh"
-#include "query/description_extractor.hh"
-#include "query/field_query.hh"
-#include "query/location_extractor.hh"
-#include "query/name_extractor.hh"
-#include "query/or.hh"
-#include "query/or_collection.hh"
-#include "query/query.hh"
-#include "query/string_search_options.hh"
-#include "query/tag_query.hh"
-#include "string_utils.hh"
+#include <stdexcept>
+#include <string>
 
-#endif // JLINKDB_JLINKDB_H
+namespace libjlinkdb {
+
+// Error thrown by this library.
+class JLinkDbError : public std::runtime_error {
+public:
+    explicit JLinkDbError(const std::string& what_arg);
+    explicit JLinkDbError(const char* what_arg);
+};
+
+} // namespace libjlinkdb
+
+#endif // LIBJLINKDB_JLINKDB_ERROR_H

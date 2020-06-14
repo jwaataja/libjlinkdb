@@ -25,12 +25,14 @@
 #include <fstream>
 #include <iterator>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <utility>
 
 #include <nlohmann/json.hpp>
 #include <sigc++/sigc++.h>
 
+#include "jlinkdb_error.hh"
 #include "link_entry.hh"
 #include "query/query.hh"
 
@@ -56,14 +58,29 @@ LinkDatabase::LinkDatabase()
 LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
 {
     json data;
-    reader >> data;
+    try {
+        reader >> data;
+    } catch (const json::parse_error& e) {
+        std::ostringstream message;
+        message << "failed to parse database file: \"";
+        message << e.what();
+        message << "\": at position ";
+        message << e.byte;
+        throw JLinkDbError{message.str()};
+    }
     data.get_to(*this);
 }
 
 LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
 {
-    // TODO(Jason): Error handling?
     std::ifstream reader{path};
+    if (!reader.is_open()) {
+        std::ostringstream message;
+        message << "failed to open file ";
+        message << path;
+        throw JLinkDbError(message.str());
+    }
+
     json data;
     reader >> data;
     data.get_to(*this);
@@ -154,6 +171,12 @@ void
 LinkDatabase::write_to_file(const string& path) const
 {
     std::ofstream writer{path};
+    if (!writer.is_open()) {
+        std::ostringstream message;
+        message << "failed to open file ";
+        message << path;
+        throw JLinkDbError{message.str()};
+    }
 
     write_to_stream(writer);
 }
@@ -227,7 +250,12 @@ to_json(json& j, const LinkDatabase& database)
 void
 from_json(const json& j, LinkDatabase& database)
 {
-    for (const auto& link : j.at("links")) {
+    auto links = j.find("links");
+    if (links == j.end()) {
+        throw JLinkDbError{"no \"links\" field in database"};
+    }
+
+    for (const auto& link : *links) {
         auto entry = std::make_shared<LinkEntry>();
         /* link.get_to(*entry); */
         from_json(link, *entry);

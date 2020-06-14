@@ -44,8 +44,17 @@ public:
     using ConstLinkEntryIterator = typename std::unordered_map<int,
         std::shared_ptr<LinkEntry>>::const_iterator;
 
+    // Constructs an empty database.
     LinkDatabase();
+
+    // Constructs a database using the JSON data in reader. Throws a
+    // JLinkDbError if the data could not be parsed.
     explicit LinkDatabase(std::istream& reader);
+
+    // Constructs a database using the contents of the file located at path.
+    //
+    // Throws a JLinkDbError if the file could not be opened or if there was a
+    // parse error.
     explicit LinkDatabase(const std::string& path);
     LinkDatabase(const LinkDatabase& other) = default;
     LinkDatabase(LinkDatabase&& other) = default;
@@ -76,7 +85,10 @@ public:
     std::vector<std::pair<int, std::shared_ptr<LinkEntry>>> search(
         const query::Query& query) const;
 
+    // Writes the database to writer.
     void write_to_stream(std::ostream& writer) const;
+    // Writes the database to the file at path. Throws a JLinkDbError if the
+    // file could not be opened.
     void write_to_file(const std::string& path) const;
 
     sigc::signal<void, int>& signal_entry_added();
