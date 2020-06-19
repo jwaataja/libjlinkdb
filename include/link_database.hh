@@ -23,6 +23,7 @@
 
 #include <cstddef>
 #include <iostream>
+#include <istream>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -95,6 +96,10 @@ public:
     sigc::signal<void, int>& signal_entry_deleted();
 
 private:
+    // Sets the contents of the database from the JSON data in reader. Throws a
+    // JLinkDbError if the data is invalid.
+    void load_from_stream(std::istream& reader);
+
     std::unordered_map<int, std::shared_ptr<LinkEntry>> links_;
     int highest_id_ = 0;
 

@@ -23,6 +23,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
+#include <istream>
 #include <iterator>
 #include <memory>
 #include <sstream>
@@ -57,18 +58,7 @@ LinkDatabase::LinkDatabase()
 
 LinkDatabase::LinkDatabase(std::istream& reader) : LinkDatabase{}
 {
-    json data;
-    try {
-        reader >> data;
-    } catch (const json::parse_error& e) {
-        std::ostringstream message;
-        message << "failed to parse database file: \"";
-        message << e.what();
-        message << "\": at position ";
-        message << e.byte;
-        throw JLinkDbError{message.str()};
-    }
-    data.get_to(*this);
+    load_from_stream(reader);
 }
 
 LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
@@ -81,9 +71,7 @@ LinkDatabase::LinkDatabase(const string& path) : LinkDatabase{}
         throw JLinkDbError(message.str());
     }
 
-    json data;
-    reader >> data;
-    data.get_to(*this);
+    load_from_stream(reader);
 }
 
 LinkDatabase::LinkEntryIterator
@@ -191,6 +179,23 @@ sigc::signal<void, int>&
 LinkDatabase::signal_entry_deleted()
 {
     return entry_deleted_;
+}
+
+void
+LinkDatabase::load_from_stream(std::istream& reader)
+{
+    json data;
+    try {
+        reader >> data;
+    } catch (const json::parse_error& e) {
+        std::ostringstream message;
+        message << "failed to parse database file: \"";
+        message << e.what();
+        message << "\": at position ";
+        message << e.byte;
+        throw JLinkDbError{message.str()};
+    }
+    data.get_to(*this);
 }
 
 void
