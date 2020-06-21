@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_H
-#define LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_H
+#ifndef LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_HH_
+#define LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_HH_
 
 #include <string>
 
@@ -36,8 +36,8 @@ public:
     std::string operator()(const LinkEntry& entry) const;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_H
+#endif  // LIBJLINKDB_QUERY_DESCRIPTION_EXTRACTOR_HH_

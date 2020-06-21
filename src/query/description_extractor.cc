@@ -32,6 +32,6 @@ DescriptionExtractor::operator()(const LinkEntry& entry) const
     return entry.description();
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

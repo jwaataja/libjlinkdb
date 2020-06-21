@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_AND_H
-#define LIBJLINKDB_QUERY_AND_H
+#ifndef LIBJLINKDB_QUERY_AND_HH_
+#define LIBJLINKDB_QUERY_AND_HH_
 
 #include <memory>
 
@@ -44,8 +44,8 @@ private:
     std::shared_ptr<Query> q2_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_AND_H
+#endif  // LIBJLINKDB_QUERY_AND_HH_

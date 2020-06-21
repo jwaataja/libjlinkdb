@@ -49,6 +49,6 @@ OrCollection::matches(const LinkEntry& entry) const
         [&](const shared_ptr<Query>& query) { return query->matches(entry); });
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_STRING_UTILS_H
-#define LIBJLINKDB_STRING_UTILS_H
+#ifndef LIBJLINKDB_STRING_UTILS_HH_
+#define LIBJLINKDB_STRING_UTILS_HH_
 
 #include <string>
 
@@ -35,6 +35,6 @@ void to_lower_in_place(std::string& str);
 bool search_string(const std::string& str, const std::string& target,
     const query::StringSearchOptions& options);
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_STRING_UTILS_H
+#endif  // LIBJLINKDB_STRING_UTILS_HH_

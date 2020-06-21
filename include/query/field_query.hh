@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_FIELD_QUERY_H
-#define LIBJLINKDB_QUERY_FIELD_QUERY_H
+#ifndef LIBJLINKDB_QUERY_FIELD_QUERY_HH_
+#define LIBJLINKDB_QUERY_FIELD_QUERY_HH_
 
 #include <string>
 
@@ -32,14 +32,16 @@ namespace libjlinkdb {
 
 namespace query {
 
-// A Query that matches if some particular field of an entry matches a search
-// term. The particular field depends on the extractor. The type F must be a
-// callabe type that takes a const LinkEntry& and returns a string.
+// A Query that matches if some particular field of an entry matches a
+// search term. The particular field depends on the extractor. The type F
+// must be a callabe type that takes a const LinkEntry& and returns a
+// string.
 template <typename F>
 class FieldQuery : public Query {
 public:
     // Constructs a FieldQuery that uses extractor to extract fields from
-    // entries and searches them for the given term. The search obeys options.
+    // entries and searches them for the given term. The search obeys
+    // options.
     FieldQuery(const F& extractor, const std::string& term,
         const StringSearchOptions& options);
 
@@ -48,8 +50,8 @@ public:
     // Returns the query's search options.
     const StringSearchOptions& options() const;
 
-    // Returns true if and only if the string extracted from entry contains the
-    // search term, according to options.
+    // Returns true if and only if the string extracted from entry contains
+    // the search term, according to options.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -87,8 +89,8 @@ FieldQuery<F>::options() const
     return options_;
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_FIELD_QUERY_H
+#endif  // LIBJLINKDB_QUERY_FIELD_QUERY_HH_

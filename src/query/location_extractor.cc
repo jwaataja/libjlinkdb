@@ -32,6 +32,6 @@ LocationExtractor::operator()(const LinkEntry& entry) const
     return entry.location();
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

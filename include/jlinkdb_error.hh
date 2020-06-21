@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_JLINKDB_ERROR_H
-#define LIBJLINKDB_JLINKDB_ERROR_H
+#ifndef LIBJLINKDB_JLINKDB_ERROR_HH_
+#define LIBJLINKDB_JLINKDB_ERROR_HH_
 
 #include <stdexcept>
 #include <string>
@@ -33,6 +33,6 @@ public:
     explicit JLinkDbError(const char* what_arg);
 };
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_JLINKDB_ERROR_H
+#endif  // LIBJLINKDB_JLINKDB_ERROR_HH_

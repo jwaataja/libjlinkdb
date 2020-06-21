@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_OR_COLLECTION_H
-#define LIBJLINKDB_QUERY_OR_COLLECTION_H
+#ifndef LIBJLINKDB_QUERY_OR_COLLECTION_HH_
+#define LIBJLINKDB_QUERY_OR_COLLECTION_HH_
 
 #include <memory>
 #include <vector>
@@ -31,8 +31,8 @@ namespace libjlinkdb {
 
 namespace query {
 
-// A query with a collection of subqueries that matches if and only if at least
-// one query in the collection matches.
+// A query with a collection of subqueries that matches if and only if at
+// least one query in the collection matches.
 class OrCollection : public Query {
 public:
     // Constructs an empty collection.
@@ -42,9 +42,10 @@ public:
     template <typename InputIterator>
     OrCollection(InputIterator first, InputIterator last);
     // Constructs a collection containing all queries listed in queries.
-    OrCollection(const std::vector<std::shared_ptr<Query>>& queries);
+    explicit OrCollection(const std::vector<std::shared_ptr<Query>>& queries);
 
-    // Returns true if and only if every query in the collection matches entry.
+    // Returns true if and only if every query in the collection matches
+    // entry.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -57,8 +58,8 @@ OrCollection::OrCollection(InputIterator first, InputIterator last)
 {
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_OR_COLLECTION_H
+#endif  // LIBJLINKDB_QUERY_OR_COLLECTION_HH_

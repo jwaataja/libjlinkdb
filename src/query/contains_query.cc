@@ -80,6 +80,6 @@ ContainsQuery::query_for_term(
     return make_shared<OrCollection>(queries);
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

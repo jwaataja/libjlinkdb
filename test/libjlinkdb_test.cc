@@ -219,7 +219,7 @@ protected:
     std::vector<LinkEntry> expected_entries_;
 };
 
-} // namespace
+}  // namespace
 
 TEST_F(LinkDatabaseTest, TestIterator)
 {

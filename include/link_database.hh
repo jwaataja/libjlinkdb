@@ -18,8 +18,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef JLINKDB_LINK_DATABASE_H
-#define JLINKDB_LINK_DATABASE_H
+#ifndef JLINKDB_LINK_DATABASE_HH_
+#define JLINKDB_LINK_DATABASE_HH_
+
+#include <sigc++/sigc++.h>
 
 #include <cstddef>
 #include <iostream>
@@ -31,7 +33,6 @@
 #include <vector>
 
 #include <nlohmann/json.hpp>
-#include <sigc++/sigc++.h>
 
 #include "link_entry.hh"
 #include "query/query.hh"
@@ -110,6 +111,6 @@ private:
     sigc::signal<void, int> entry_deleted_;
 };
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // JLINKDB_LINK_DATABASE_H
+#endif  // JLINKDB_LINK_DATABASE_HH_

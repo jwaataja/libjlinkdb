@@ -49,6 +49,6 @@ AttributeQuery::matches(const LinkEntry& entry) const
         entry.get_attribute(attr_name_), attr_value_, options_);
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

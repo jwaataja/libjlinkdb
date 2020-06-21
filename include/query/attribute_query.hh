@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_H
-#define LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_H
+#ifndef LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_HH_
+#define LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_HH_
 
 #include <string>
 
@@ -44,8 +44,8 @@ private:
     StringSearchOptions options_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_H
+#endif  // LIBJLINKDB_QUERY_ATTRIBUTE_QUERY_HH_

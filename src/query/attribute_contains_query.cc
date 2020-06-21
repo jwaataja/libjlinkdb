@@ -51,6 +51,6 @@ AttributeContainsQuery::matches(const LinkEntry& entry) const
         std::begin(entry.attributes()), std::end(entry.attributes()), matcher);
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_OR_H
-#define LIBJLINKDB_QUERY_OR_H
+#ifndef LIBJLINKDB_QUERY_OR_HH_
+#define LIBJLINKDB_QUERY_OR_HH_
 
 #include <memory>
 
@@ -29,15 +29,16 @@ namespace libjlinkdb {
 
 namespace query {
 
-// Query that matches an entry if and only if at least one of two subqueries
-// match.
+// Query that matches an entry if and only if at least one of two
+// subqueries match.
 class Or : public Query {
 public:
-    // Constructs a query that matches if and only if at least one of q1 or q2
-    // match.
+    // Constructs a query that matches if and only if at least one of q1 or
+    // q2 match.
     Or(const std::shared_ptr<Query>& q1, const std::shared_ptr<Query>& q2);
 
-    // Returns true if and only if at least one the two subqueries match entry.
+    // Returns true if and only if at least one the two subqueries match
+    // entry.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -45,8 +46,8 @@ private:
     std::shared_ptr<Query> q2_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_OR_H
+#endif  // LIBJLINKDB_QUERY_OR_HH_

@@ -32,6 +32,6 @@ NameExtractor::operator()(const LinkEntry& entry) const
     return entry.name();
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

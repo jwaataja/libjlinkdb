@@ -60,4 +60,4 @@ search_string(const string& str, const string& target,
     }
 }
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

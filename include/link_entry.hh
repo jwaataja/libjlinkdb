@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef JLINKDB_LINK_ENTRY_H
-#define JLINKDB_LINK_ENTRY_H
+#ifndef JLINKDB_LINK_ENTRY_HH_
+#define JLINKDB_LINK_ENTRY_HH_
 
 #include <string>
 #include <unordered_map>
@@ -35,7 +35,7 @@ public:
     LinkEntry() = default;
     // Constructs a LinkEntry with the given location. The location must be
     // empty or a valid URL. Otherwise, a JLinkDbError is thrown.
-    LinkEntry(const std::string& location);
+    explicit LinkEntry(const std::string& location);
 
     LinkEntry(const LinkEntry& other) = default;
     LinkEntry(LinkEntry&& other) = default;
@@ -98,6 +98,6 @@ private:
     std::unordered_map<std::string, std::string> attributes_;
 };
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // JLINKDB_LINK_ENTRY_H
+#endif  // JLINKDB_LINK_ENTRY_HH_

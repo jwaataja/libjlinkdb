@@ -18,10 +18,11 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_CONTAINS_QUERY_H
-#define LIBJLINKDB_QUERY_CONTAINS_QUERY_H
+#ifndef LIBJLINKDB_QUERY_CONTAINS_QUERY_HH_
+#define LIBJLINKDB_QUERY_CONTAINS_QUERY_HH_
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "link_entry.hh"
@@ -33,14 +34,14 @@ namespace libjlinkdb {
 
 namespace query {
 
-// A query with search terms that matches an entry if it contains one of the
-// search terms in any of its fields.
+// A query with search terms that matches an entry if it contains one of
+// the search terms in any of its fields.
 class ContainsQuery : public Query {
 public:
     // Constructs a query with no terms that will match nothing.
     ContainsQuery() = default;
-    // Contstructs a query with the given terms and search options. Duplicates
-    // are ignored.
+    // Contstructs a query with the given terms and search options.
+    // Duplicates are ignored.
     explicit ContainsQuery(const std::vector<std::string>& terms,
         const StringSearchOptions& options);
 
@@ -54,8 +55,8 @@ private:
     OrCollection underlying_query_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_CONTAINS_QUERY_H
+#endif  // LIBJLINKDB_QUERY_CONTAINS_QUERY_HH_

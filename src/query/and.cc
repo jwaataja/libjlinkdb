@@ -42,6 +42,6 @@ And::matches(const LinkEntry& entry) const
     return q1_->matches(entry) && q2_->matches(entry);
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

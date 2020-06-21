@@ -34,4 +34,4 @@ JLinkDbError::JLinkDbError(const char* what_arg) : std::runtime_error{what_arg}
 {
 }
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

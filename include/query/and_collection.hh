@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_AND_COLLECTION_H
-#define LIBJLINKDB_QUERY_AND_COLLECTION_H
+#ifndef LIBJLINKDB_QUERY_AND_COLLECTION_HH_
+#define LIBJLINKDB_QUERY_AND_COLLECTION_HH_
 
 #include <memory>
 #include <vector>
@@ -31,20 +31,21 @@ namespace libjlinkdb {
 
 namespace query {
 
-// A query with a collection of subqueries that matches if and only if every
-// query in the collection matches.
+// A query with a collection of subqueries that matches if and only if
+// every query in the collection matches.
 class AndCollection : public Query {
 public:
     // Constructs an empty collection.
     AndCollection() = default;
-    // Constructs a collection containg all queries in the range [first, last).
-    // The iterator should point to type shared_ptr<Query>.
+    // Constructs a collection containg all queries in the range [first,
+    // last). The iterator should point to type shared_ptr<Query>.
     template <typename InputIterator>
     AndCollection(InputIterator first, InputIterator last);
     // Constructs a collection containing all queries listed in queries.
-    AndCollection(const std::vector<std::shared_ptr<Query>>& queries);
+    explicit AndCollection(const std::vector<std::shared_ptr<Query>>& queries);
 
-    // Returns true if and only if every query in the collection matches entry.
+    // Returns true if and only if every query in the collection matches
+    // entry.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -57,8 +58,8 @@ AndCollection::AndCollection(InputIterator first, InputIterator last)
 {
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_AND_COLLECTION_H
+#endif  // LIBJLINKDB_QUERY_AND_COLLECTION_HH_

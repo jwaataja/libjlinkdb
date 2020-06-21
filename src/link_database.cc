@@ -20,6 +20,8 @@
 
 #include "link_database.hh"
 
+#include <sigc++/sigc++.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
@@ -31,7 +33,6 @@
 #include <utility>
 
 #include <nlohmann/json.hpp>
-#include <sigc++/sigc++.h>
 
 #include "jlinkdb_error.hh"
 #include "link_entry.hh"
@@ -268,4 +269,4 @@ from_json(const json& j, LinkDatabase& database)
     }
 }
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

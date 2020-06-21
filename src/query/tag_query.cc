@@ -51,6 +51,6 @@ TagQuery::matches(const LinkEntry& entry) const
         });
 }
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

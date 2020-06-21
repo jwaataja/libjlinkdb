@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef JLINKDB_JLINKDB_H
-#define JLINKDB_JLINKDB_H
+#ifndef JLINKDB_JLINKDB_HH_
+#define JLINKDB_JLINKDB_HH_
 
 #include "jlinkdb_error.hh"
 #include "link_database.hh"
@@ -40,4 +40,4 @@
 #include "query/tag_query.hh"
 #include "string_utils.hh"
 
-#endif // JLINKDB_JLINKDB_H
+#endif  // JLINKDB_JLINKDB_HH_

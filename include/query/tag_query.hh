@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_TAG_QUERY_H
-#define LIBJLINKDB_QUERY_TAG_QUERY_H
+#ifndef LIBJLINKDB_QUERY_TAG_QUERY_HH_
+#define LIBJLINKDB_QUERY_TAG_QUERY_HH_
 
 #include <string>
 
@@ -38,8 +38,8 @@ public:
     // Constructs a query that searchs tags for term, obeying options.
     TagQuery(const std::string& term, const StringSearchOptions& options);
 
-    // Returns true if and only if at least one of entry's tags contains the
-    // term, according to options.
+    // Returns true if and only if at least one of entry's tags contains
+    // the term, according to options.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -47,8 +47,8 @@ private:
     StringSearchOptions options_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_TAG_QUERY_H
+#endif  // LIBJLINKDB_QUERY_TAG_QUERY_HH_

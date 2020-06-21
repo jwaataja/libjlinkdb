@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef JLINKDB_QUERY_QUERY_H
-#define JLINKDB_QUERY_QUERY_H
+#ifndef JLINKDB_QUERY_QUERY_HH_
+#define JLINKDB_QUERY_QUERY_HH_
 
 #include "link_entry.hh"
 
@@ -32,11 +32,13 @@ class Query {
 public:
     // Returns true if this query matches entry, false otherwise.
     virtual bool matches(const LinkEntry& entry) const = 0;
-    virtual ~Query(){};
+    virtual ~Query()
+    {
+    }
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // JLINKDB_QUERY_QUERY_H
+#endif  // JLINKDB_QUERY_QUERY_HH_

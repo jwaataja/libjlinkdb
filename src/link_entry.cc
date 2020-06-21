@@ -176,4 +176,4 @@ LinkEntry::clear_attributes()
     attributes_.clear();
 }
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb

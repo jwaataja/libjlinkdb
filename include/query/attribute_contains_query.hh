@@ -18,8 +18,8 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 
-#ifndef LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_H
-#define LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_H
+#ifndef LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_HH_
+#define LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_HH_
 
 #include <string>
 
@@ -31,16 +31,18 @@ namespace libjlinkdb {
 
 namespace query {
 
-// A query that searches over all attributes of a link and matches if either
-// the key or value of any attribute contains a search term.
+// A query that searches over all attributes of a link and matches if
+// either the key or value of any attribute contains a search term.
 class AttributeContainsQuery : public Query {
 public:
-    // Constructs a query that searches for term with the given search options.
+    // Constructs a query that searches for term with the given search
+    // options.
     AttributeContainsQuery(
         const std::string& term, const StringSearchOptions& options);
 
-    // Returns true if and only if any attribute in entry has a name or value
-    // that matches the search term, according to the query's search options.
+    // Returns true if and only if any attribute in entry has a name or
+    // value that matches the search term, according to the query's search
+    // options.
     bool matches(const LinkEntry& entry) const override;
 
 private:
@@ -48,8 +50,8 @@ private:
     StringSearchOptions options_;
 };
 
-} // namespace query
+}  // namespace query
 
-} // namespace libjlinkdb
+}  // namespace libjlinkdb
 
-#endif // LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_H
+#endif  // LIBJLINKDB_QUERY_ATTRIBUTE_CONTAINS_QUERY_HH_
