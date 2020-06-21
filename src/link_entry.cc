@@ -147,10 +147,15 @@ LinkEntry::set_description(const string& description)
     description_ = description;
 }
 
-const string&
+const string
 LinkEntry::get_attribute(const string& attribute) const
 {
-    return attributes_.at(attribute);
+    auto iter = attributes_.find(attribute);
+    if (iter != attributes_.end()) {
+        return iter->second;
+    } else {
+        return "";
+    }
 }
 
 void

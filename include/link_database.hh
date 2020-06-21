@@ -38,6 +38,7 @@
 
 namespace libjlinkdb {
 
+// A database of links.
 class LinkDatabase {
 public:
     using LinkEntryIterator =
@@ -92,7 +93,9 @@ public:
     // file could not be opened.
     void write_to_file(const std::string& path) const;
 
+    // Signal emitted whenever a link is added to the database.
     sigc::signal<void, int>& signal_entry_added();
+    // Signal emitted whenever a link is deleted from the database.
     sigc::signal<void, int>& signal_entry_deleted();
 
 private:

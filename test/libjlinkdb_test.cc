@@ -188,6 +188,12 @@ TEST(TestLinkEntry, TestInvalidUrlSetter)
     ASSERT_THROW(entry.set_location("invalid_url"), libjlinkdb::JLinkDbError);
 }
 
+TEST(TestLinkEntry, TestGetAttributeNotExists)
+{
+    LinkEntry entry;
+    ASSERT_EQ(entry.get_attribute("fake"), "");
+}
+
 namespace {
 
 class LinkDatabaseTest : public ::testing::Test {
