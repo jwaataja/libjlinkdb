@@ -1,0 +1,3 @@
+[submodule "extern/LUrlParser"]
+	path = extern/LUrlParser
+	url = ../../jwaataja/LUrlParser.git

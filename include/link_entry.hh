@@ -27,9 +27,14 @@
 
 namespace libjlinkdb {
 
+// A value representing a single link entry. Will contain either an empty URL
+// location or a valid URL.
 class LinkEntry {
 public:
+    // Constructs a LinkEntry with an empty location.
     LinkEntry() = default;
+    // Constructs a LinkEntry with the given location. The location must be
+    // empty or a valid URL. Otherwise, a JLinkDbError is thrown.
     LinkEntry(const std::string& location);
 
     LinkEntry(const LinkEntry& other) = default;
@@ -42,7 +47,9 @@ public:
     bool operator!=(const LinkEntry& other) const;
 
     const std::string& location() const;
-    void set_location(const std::string& link);
+    // Sets the location to given location. The location must be empty or a
+    // valid URL.  Otherwise, a JLinkDbError is thrown.
+    void set_location(const std::string& location);
 
     const std::string& name() const;
     void set_name(const std::string& name);

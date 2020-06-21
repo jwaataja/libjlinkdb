@@ -19,7 +19,9 @@ target_include_directories(libjlinkdb
 target_link_libraries(libjlinkdb
 	PUBLIC
 	${GLIBMM_LIBRARIES}
-	${LIBSIGCPP_LIBRARIES})
+	${LIBSIGCPP_LIBRARIES}
+	PRIVATE
+	LUrlParser)
 
 target_link_libraries(libjlinkdb PUBLIC nlohmann_json::nlohmann_json)
 

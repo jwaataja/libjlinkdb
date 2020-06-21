@@ -1,24 +1,23 @@
-/*
- * Copyright (c) 2019 Jason Waataja
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- */
+// Copyright (c) 2020 Jason Waataja
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+
 
 #include <algorithm>
 #include <functional>
@@ -46,6 +45,8 @@ using std::unordered_map;
 using std::unordered_set;
 using std::vector;
 
+constexpr const char BASIC_URL1[] = "https://gentoo.org";
+constexpr const char BASIC_URL2[] = "https://archlinux.org";
 constexpr const char EMPTY_LINKS[] = "{ \"links\": [] }";
 constexpr const char BLANK_LINE[] = "{ \"links\":\n[] }";
 constexpr const char BASIC_LINK[] = "{ \"links\": [ { } ] }";
@@ -156,15 +157,15 @@ TEST(TestLinkEntry, TestConstructor)
 
 TEST(TestLinkEntry, TestEquals)
 {
-    LinkEntry entry1{"a"};
+    LinkEntry entry1{BASIC_URL1};
     entry1.set_name("a");
     entry1.set_description("b");
 
-    LinkEntry entry2{"a"};
+    LinkEntry entry2{BASIC_URL1};
     entry2.set_name("b");
     entry2.set_description("a");
 
-    LinkEntry entry3{"b"};
+    LinkEntry entry3{BASIC_URL2};
     entry3.set_name("a");
     entry3.set_description("a");
 
@@ -176,14 +177,25 @@ TEST(TestLinkEntry, TestEquals)
     EXPECT_NE(entry3, entry1);
 }
 
+TEST(TestLinkEntry, TestInvalidUrlConstructor)
+{
+    ASSERT_THROW(LinkEntry{"invalid_url"}, libjlinkdb::JLinkDbError);
+}
+
+TEST(TestLinkEntry, TestInvalidUrlSetter)
+{
+    LinkEntry entry;
+    ASSERT_THROW(entry.set_location("invalid_url"), libjlinkdb::JLinkDbError);
+}
+
 namespace {
 
 class LinkDatabaseTest : public ::testing::Test {
 protected:
     void SetUp() override
     {
-        add_link(db1_, "a");
-        add_link(db1_, "b");
+        add_link(db1_, BASIC_URL1);
+        add_link(db1_, BASIC_URL2);
         expected_entries_.push_back({});
         LinkEntry link{"https://gentoo.org"};
         link.set_name("MyName");
@@ -207,28 +219,28 @@ TEST_F(LinkDatabaseTest, TestIterator)
 {
     auto links = gather_links(db1_);
     EXPECT_EQ(2, links.size());
-    EXPECT_TRUE(has_link(links, "a"));
-    EXPECT_TRUE(has_link(links, "b"));
+    EXPECT_TRUE(has_link(links, BASIC_URL1));
+    EXPECT_TRUE(has_link(links, BASIC_URL2));
 }
 
 TEST_F(LinkDatabaseTest, TestAddEntryId)
 {
-    int id1 = db_.add_entry(std::make_shared<LinkEntry>("a"));
-    int id2 = db_.add_entry(std::make_shared<LinkEntry>("b"));
-    EXPECT_EQ("a", db_.get_entry(id1)->location());
-    EXPECT_EQ("b", db_.get_entry(id2)->location());
+    int id1 = db_.add_entry(std::make_shared<LinkEntry>(BASIC_URL1));
+    int id2 = db_.add_entry(std::make_shared<LinkEntry>(BASIC_URL2));
+    EXPECT_EQ(BASIC_URL1, db_.get_entry(id1)->location());
+    EXPECT_EQ(BASIC_URL2, db_.get_entry(id2)->location());
 }
 
 TEST_F(LinkDatabaseTest, TestHasLink)
 {
-    int id = db_.add_entry(std::make_shared<LinkEntry>("a"));
+    int id = db_.add_entry(std::make_shared<LinkEntry>(BASIC_URL1));
     EXPECT_TRUE(db_.has_entry(id));
 }
 
 TEST_F(LinkDatabaseTest, TestRemoveLink)
 {
     LinkDatabase db;
-    int id = db.add_entry(std::make_shared<LinkEntry>("a"));
+    int id = db.add_entry(std::make_shared<LinkEntry>(BASIC_URL1));
     EXPECT_TRUE(db.has_entry(id));
     db.delete_entry(id);
     EXPECT_FALSE(db.has_entry(id));
@@ -244,16 +256,16 @@ TEST_F(LinkDatabaseTest, TestQueryAll)
 {
     auto links = query_func(db1_, [](const LinkEntry&) { return true; });
     EXPECT_EQ(2, links.size());
-    EXPECT_TRUE(has_link(links, "a"));
-    EXPECT_TRUE(has_link(links, "b"));
+    EXPECT_TRUE(has_link(links, BASIC_URL1));
+    EXPECT_TRUE(has_link(links, BASIC_URL2));
 }
 
 TEST_F(LinkDatabaseTest, TestQueryBasic)
 {
-    auto links = query_func(
-        db1_, [](const LinkEntry& entry) { return entry.location() == "a"; });
+    auto links = query_func(db1_,
+        [](const LinkEntry& entry) { return entry.location() == BASIC_URL1; });
     EXPECT_EQ(1, links.size());
-    EXPECT_TRUE(has_link(links, "a"));
+    EXPECT_TRUE(has_link(links, BASIC_URL1));
 }
 
 TEST_F(LinkDatabaseTest, TestEmptyLinks)
@@ -325,7 +337,7 @@ class ContainsQueryTest : public ::testing::Test {
 protected:
     void SetUp() override
     {
-        entry1_.set_location("abc def ghi");
+        entry1_.set_location("https://abcdefghi.com");
         entry2_.set_name("abc def ghi");
         entry3_.set_description("abc def ghi");
         entry3_.add_tag("abc");
@@ -333,7 +345,7 @@ protected:
         entry3_.add_tag("ghi");
         entry4_.set_attribute("abc", "def");
         entry4_.set_attribute("ghi", "jkl");
-        entry5_.set_location("ab");
+        entry5_.set_location("https://ab.com");
         entry5_.set_name("ab");
         entry5_.add_tag("ab");
         entry5_.set_attribute("ab", "xy");

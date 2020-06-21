@@ -25,6 +25,9 @@
 #include <unordered_set>
 
 #include <nlohmann/json.hpp>
+#include "LUrlParser.h"
+
+#include "jlinkdb_error.hh"
 
 namespace libjlinkdb {
 
@@ -34,6 +37,15 @@ using std::unordered_set;
 
 LinkEntry::LinkEntry(const string& location) : location_{location}
 {
+    if (location.empty()) {
+        return;
+    }
+
+
+    auto parsed = LUrlParser::ParseURL::parseURL(location);
+    if (!parsed.isValid()) {
+        throw JLinkDbError{"invalid url: " + location};
+    }
 }
 
 bool
@@ -59,6 +71,13 @@ LinkEntry::location() const
 void
 LinkEntry::set_location(const string& location)
 {
+    if (!location.empty()) {
+        auto parsed = LUrlParser::ParseURL::parseURL(location);
+        if (!parsed.isValid()) {
+            throw JLinkDbError{"invalid url: " + location};
+        }
+    }
+
     location_ = location;
 }
 
