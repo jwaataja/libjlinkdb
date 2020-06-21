@@ -68,6 +68,10 @@ constexpr const char WITH_ATTRIBUTES[] =
     "{ }"
     "]"
     "}";
+constexpr const char INVALID_URL[] = "{ \"links\": ["
+                                     "{ \"location\": \"invalid_url\" }"
+                                     "]"
+                                     "}";
 
 void
 add_link(LinkDatabase& db, const string& link)
@@ -332,6 +336,11 @@ TEST_F(LinkDatabaseTest, TestExtraneousFieldsAllowed)
 {
     ASSERT_NO_THROW(database_from_string(
         "{ \"links\": { \"dummy1\": \"a\" }, \"dummy2\": \"b\" }"));
+}
+
+TEST_F(LinkDatabaseTest, TestInvalidUrl)
+{
+    ASSERT_THROW(database_from_string(INVALID_URL), libjlinkdb::JLinkDbError);
 }
 
 
